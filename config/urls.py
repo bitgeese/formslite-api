@@ -8,7 +8,13 @@ from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
 
+from django.http import HttpResponse
+
+def health_check(request):
+    return HttpResponse("OK")
+
 urlpatterns = [
+    path("healthcheck/", health_check, name="health_check"),
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # Media files
