@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+
+
+Create new access key
+
+
+{% endblock title %}
+{% block content %}
+  <h1>
+  
+  
+    New Access Key
+  
+  
+</h1>
+<form class="form-horizontal"
+      method="post"
+      action="/access/">
+  {% csrf_token %}
+  {{ form|crispy }}
+  <div class="control-group">
+    <div class="controls">
+      <button type="submit" class="btn btn-primary">Get Access Key</button>
+    </div>
+  </div>
+</form>
+{% endblock content %}

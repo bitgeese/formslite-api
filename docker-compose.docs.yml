@@ -1,0 +1,16 @@
+services:
+  docs:
+    image: web_forms_local_docs
+    container_name: web_forms_local_docs
+    build:
+      context: .
+      dockerfile: ./compose/local/docs/Dockerfile
+    env_file:
+      - ./.envs/.local/.django
+    volumes:
+      - ./docs:/docs:z
+      - ./config:/app/config:z
+      - ./web_forms:/app/web_forms:z
+    ports:
+      - '9000:9000'
+    command: /start-docs
