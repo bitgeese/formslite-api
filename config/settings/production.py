@@ -7,7 +7,10 @@ from .base import DATABASES, INSTALLED_APPS, SPECTACULAR_SETTINGS, env
 # https://docs.djangoproject.com/en/dev/ref/settings/#secret-key
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["*", "healthcheck.railway.app"]#env.list("DJANGO_ALLOWED_HOSTS", default=["*"])
+ALLOWED_HOSTS = [
+    "*",
+    "healthcheck.railway.app",
+]  # env.list("DJANGO_ALLOWED_HOSTS", default=["*"])
 
 # DATABASES
 # ------------------------------------------------------------------------------
@@ -197,6 +200,6 @@ SPECTACULAR_SETTINGS["SERVERS"] = [
 # ------------------------------------------------------------------------------
 # Railway
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.up.railway.app", 
+    "https://*.up.railway.app",
     # NOTE: Place your custom url here if any
 ]
