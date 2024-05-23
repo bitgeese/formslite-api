@@ -195,3 +195,8 @@ SPECTACULAR_SETTINGS["SERVERS"] = [
 ]
 # Your stuff...
 # ------------------------------------------------------------------------------
+# Railway
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.up.railway.app", 
+    # NOTE: Place your custom url here if any
+]
