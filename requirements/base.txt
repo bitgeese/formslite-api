@@ -25,3 +25,5 @@ django-cors-headers==4.3.1  # https://github.com/adamchainz/django-cors-headers
 drf-spectacular==0.27.2  # https://github.com/tfranzel/drf-spectacular
 
 django_extensions==3.2.3
+django-allauth==0.63.1
+django-allauth-2fa==0.11.1

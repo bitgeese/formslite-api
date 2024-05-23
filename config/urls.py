@@ -18,7 +18,7 @@ urlpatterns = [
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
     # Media files
-    # *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
+    *static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT),
 ]
 
 # API URLS
