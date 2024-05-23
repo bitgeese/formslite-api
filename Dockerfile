@@ -27,7 +27,8 @@ RUN apt-get update && \
 WORKDIR /app
 
 # Python Dependencies
-COPY --chown=python:python /requirements /app/
+COPY --chown=python:python /requirements/base.txt /app/requirements/base.txt
+COPY --chown=python:python /requirements/production.txt /app/requirements/production.txt
 COPY --chown=python:python ./requirements.txt /app/
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt --no-cache-dir --compile
