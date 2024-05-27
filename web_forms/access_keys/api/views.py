@@ -21,5 +21,5 @@ class AccessKeyViewSet(CreateModelMixin, GenericViewSet):
         message = f"Here is your access keys: {instance.id}"
         recipient_list = [instance.email]
         send_mail(
-            subject, message, "from@example.com", recipient_list, fail_silently=False
+            subject, message, "simpleforms@bitgeese.io", recipient_list, fail_silently=False
         )

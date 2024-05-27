@@ -27,7 +27,7 @@ class SubmissionViewSet(CreateModelMixin, GenericViewSet):
         )
         recipient_list = [instance.access_key.email]
         send_mail(
-            subject, message, "from@example.com", recipient_list, fail_silently=False
+            subject, message, "simpleforms@bitgeese.io", recipient_list, fail_silently=False
         )
 
     @action(detail=False, methods=["get"], url_path="(?P<access_key_id>[^/.]+)")
