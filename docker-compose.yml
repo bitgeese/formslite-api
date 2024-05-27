@@ -25,9 +25,9 @@ services:
       - db
       - redis
     command: /app/deployment/server-entrypoint.sh
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck/"]
-      interval: 5s
+    # healthcheck:
+    #   test: ["CMD", "curl", "-f", "http://localhost:8000/healthcheck/"]
+    #   interval: 5s
     ports:
       - 8000:8000
 
