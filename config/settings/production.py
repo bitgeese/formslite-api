@@ -10,6 +10,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 ALLOWED_HOSTS = [
     "*",
     "healthcheck.railway.app",
+    "web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app"
 ]  # env.list("DJANGO_ALLOWED_HOSTS", default=["*"])
 
 # DATABASES

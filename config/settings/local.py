@@ -12,7 +12,10 @@ SECRET_KEY = env(
     default="zJBBSUsc2DkGM9iHpCMSezFnueCcqGgMhgWeseebv3K1yKvchakgtbuBMIbrnqdq",
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["*"]  # noqa: S104
+ALLOWED_HOSTS = ["*",
+                 "healthcheck.railway.app",
+    "web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app"
+                 ]  # noqa: S104
 
 # CACHES
 # ------------------------------------------------------------------------------
