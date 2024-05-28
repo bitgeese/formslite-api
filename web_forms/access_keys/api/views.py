@@ -17,7 +17,7 @@ class AccessKeyViewSet(CreateModelMixin, GenericViewSet):
     def perform_create(self, serializer):
         instance = serializer.save()
 
-        subject = "Your SimpleForms.io Access Key!"
+        subject = "Your FormsLite.io Access Key!"
         message = f"Here is your access key: {instance.id}"
         recipient_list = [instance.email]
         # TODO move to variable

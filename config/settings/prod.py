@@ -34,12 +34,12 @@ CACHES = {
 INSTALLED_APPS += ["anymail"]
 DEFAULT_FROM_EMAIL = env(
     "DJANGO_DEFAULT_FROM_EMAIL",
-    default="SimpleForms.io <smartforms@bitgeese.io>",
+    default="FormsLite.io <contact@formslite.io>",
 )
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 EMAIL_SUBJECT_PREFIX = env(
     "DJANGO_EMAIL_SUBJECT_PREFIX",
-    default="[SimpleForms.io] ",
+    default="[FormsLite.io] ",
 )
 EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
 ANYMAIL = {
