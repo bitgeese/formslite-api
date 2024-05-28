@@ -44,9 +44,7 @@ class SubmissionViewSet(CreateModelMixin, GenericViewSet):
         return HttpResponseRedirect("https://web-forms-frontend.vercel.app/success")
 
     @action(detail=False, methods=["get"], url_path="(?P<access_key_id>[^/.]+)")
-    def get_submissions_by_access_key(self, request, access_key_id=None):
-        if not access_key_id:
-            return Response({"error": "Access key is required"}, status=400)
+    def get_submissions_by_access_key(self, request, access_key_id):
         submissions = self.queryset.filter(access_key_id=access_key_id)
         serializer = self.get_serializer(submissions, many=True)
         return Response(serializer.data)

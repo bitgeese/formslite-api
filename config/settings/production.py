@@ -11,6 +11,7 @@ ALLOWED_HOSTS = [
     "*",
     "healthcheck.railway.app",
     "https://*.up.railway.app",
+    "web-forms-frontend.vercel.app",
     "web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app",
 ]  # env.list("DJANGO_ALLOWED_HOSTS", default=["*"])
 

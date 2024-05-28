@@ -8,6 +8,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [
     "*",
+    "web-forms-frontend.vercel.app",
     "healthcheck.railway.app",
     "web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app",
 ]  # noqa: S104

@@ -5,9 +5,7 @@ from web_forms.submissions.models import Submission
 
 
 class SubmissionSerializer(serializers.ModelSerializer):
-    access_key = serializers.PrimaryKeyRelatedField(
-        queryset=AccessKey.objects.all(), write_only=True
-    )
+    access_key = serializers.CharField(write_only=True)
     data = serializers.JSONField(required=False)
 
     class Meta:
@@ -16,19 +14,21 @@ class SubmissionSerializer(serializers.ModelSerializer):
         extra_kwargs = {"access_key": {"write_only": True}}
 
     def validate_access_key(self, value):
-        # Validate the access_key to ensure it exists
-        if not AccessKey.objects.filter(id=value.id).exists():
+        try:
+            access_key = AccessKey.objects.get(id=value)
+        except AccessKey.DoesNotExist:
             raise serializers.ValidationError("Invalid access key provided")
-        return value
+        return access_key
+
+    def validate(self, data):
+        data_field = {k: v for k, v in self.initial_data.items() if k != "access_key"}
+        data["data"] = data_field
+
+        return data
 
     def create(self, validated_data):
-        # Extract access_key from validated data and remove it
         access_key = validated_data.pop("access_key")
-
-        # Remaining data should be treated as the JSON data field
-        data = {
-            k: v for k, v in self.context["request"].data.items() if k != "access_key"
-        }
+        data = validated_data.pop("data")
         submission = Submission.objects.create(access_key=access_key, data=data)
         return submission
 
@@ -38,7 +38,5 @@ class SubmissionSerializer(serializers.ModelSerializer):
         Here, we omit the access_key in the output.
         """
         ret = super().to_representation(instance)
-        # You can choose to remove or alter the representation as needed,
-        # here we skip `access_key`
         ret.pop("access_key", None)
         return ret
