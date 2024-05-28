@@ -17,8 +17,7 @@ def test_submission_view_success(api_client, access_key):
     data = {"access_key": access_key.id, "field1": "value1", "field2": "value2"}
     response = api_client.post(url, data, format="multipart")
 
-    assert response.status_code == status.HTTP_200_OK
-    assert response.data["message"] == "Email sent successfully"
+    assert response.status_code == status.HTTP_302_FOUND
 
     # Check that an email was sent
     assert len(mail.outbox) == 1
@@ -59,8 +58,7 @@ def test_submission_view_optional_data_field(api_client, access_key):
     data = {"access_key": access_key.id}
     response = api_client.post(url, data, format="multipart")
 
-    assert response.status_code == status.HTTP_200_OK
-    assert response.data["message"] == "Email sent successfully"
+    assert response.status_code == status.HTTP_302_FOUND
 
     # Check that an email was sent
     assert len(mail.outbox) == 1
@@ -81,8 +79,7 @@ def test_submission_view_with_extra_fields(api_client, access_key):
     }
     response = api_client.post(url, data, format="multipart")
 
-    assert response.status_code == status.HTTP_200_OK
-    assert response.data["message"] == "Email sent successfully"
+    assert response.status_code == status.HTTP_302_FOUND
 
     # Check that an email was sent
     assert len(mail.outbox) == 1

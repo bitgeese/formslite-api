@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
+from django.http import HttpResponseRedirect
 from django.utils.html import format_html
 from rest_framework import status
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -11,8 +12,6 @@ from web_forms.authentication import CsrfExemptSessionAuthentication
 from web_forms.utils import format_dict_for_email
 
 from .serializers import SubmissionSerializer
-from django.http import HttpResponseRedirect
-
 
 
 class SubmissionView(APIView):

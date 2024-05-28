@@ -3,7 +3,7 @@ import uuid
 from factory import Faker
 from factory.django import DjangoModelFactory
 
-from web_forms.submissions.models import AccessKey
+from web_forms.access_keys.models import AccessKey
 
 
 class AccessKeyFactory(DjangoModelFactory):
