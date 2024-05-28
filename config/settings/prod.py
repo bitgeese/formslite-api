@@ -34,7 +34,7 @@ CACHES = {
 INSTALLED_APPS += ["anymail"]
 DEFAULT_FROM_EMAIL = env(
     "DJANGO_DEFAULT_FROM_EMAIL",
-    default="SimpleForms.io <simpleforms@bitgeese.io>",
+    default="SimpleForms.io <smartforms@bitgeese.io>",
 )
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 EMAIL_SUBJECT_PREFIX = env(

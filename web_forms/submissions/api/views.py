@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
 from django.http import HttpResponseRedirect
 from django.utils.html import format_html
@@ -43,7 +44,7 @@ class SubmissionViewSet(CreateModelMixin, GenericViewSet):
         recipient_list = [instance.access_key.email]
 
         msg = EmailMultiAlternatives(
-            subject, text_content, "simpleforms@bitgeese.io", recipient_list
+            subject, text_content, settings.DEFAULT_FROM_EMAIL, recipient_list
         )
         msg.attach_alternative(html_content, "text/html")
         msg.send(fail_silently=False)

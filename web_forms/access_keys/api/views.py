@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.mail import send_mail
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.permissions import AllowAny
@@ -23,7 +24,7 @@ class AccessKeyViewSet(CreateModelMixin, GenericViewSet):
         send_mail(
             subject,
             message,
-            "simpleforms@bitgeese.io",
+            settings.DEFAULT_FROM_EMAIL,
             recipient_list,
             fail_silently=False,
         )
