@@ -2,11 +2,12 @@ import logging
 
 from django.conf import settings
 from django.core.mail import send_mail
-from rest_framework.mixins import CreateModelMixin
+from rest_framework import status
+from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from web_forms.access_keys.models import AccessKey
 from web_forms.authentication import CsrfExemptSessionAuthentication
 
 from .serializers import AccessKeySerializer
@@ -14,19 +15,19 @@ from .serializers import AccessKeySerializer
 logger = logging.getLogger(__name__)
 
 
-class AccessKeyViewSet(CreateModelMixin, GenericViewSet):
-    serializer_class = AccessKeySerializer
-    queryset = AccessKey.objects.all()
-    # authentication_classes = (CsrfExemptSessionAuthentication,)
+class AccessKeyCreateAPIView(APIView):
     permission_classes = [AllowAny]
+    authentication_classes = (CsrfExemptSessionAuthentication,)
+    parser_classes = [FormParser, MultiPartParser, JSONParser]
 
-    def perform_create(self, serializer):
-        instance = serializer.save()
+    def post(self, request, *args, **kwargs):
+        serializer = AccessKeySerializer(data=request.data)
+        if serializer.is_valid():
+            instance = serializer.save()
 
-        subject = "Your FormsLite.io Access Key!"
-        message = f"Here is your access key: {instance.id}"
-        recipient_list = [instance.email]
-        try:
+            subject = "Your FormsLite.io Access Key!"
+            message = f"Here is your access key: {instance.id}"
+            recipient_list = [instance.email]
             send_mail(
                 subject,
                 message,
@@ -34,6 +35,8 @@ class AccessKeyViewSet(CreateModelMixin, GenericViewSet):
                 recipient_list,
                 fail_silently=False,
             )
-            logger.info(f"Email sent successfully to {instance.email}")
-        except Exception as e:
-            logger.error(f"Failed to send email to {instance.email}: {e}")
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+access_key_create_api = AccessKeyCreateAPIView.as_view()

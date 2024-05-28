@@ -49,11 +49,7 @@ class SubmissionView(APIView):
                 subject, text_content, settings.DEFAULT_FROM_EMAIL, recipient_list
             )
             msg.attach_alternative(html_content, "text/html")
-            try:
-                msg.send(fail_silently=False)
-                logger.info(f"Email sent successfully to {access_key.email}")
-            except Exception as e:
-                logger.error(f"Failed to send email to {access_key.email}: {e}")
+            msg.send(fail_silently=False)
 
             return HttpResponseRedirect("https://www.formslite.io/success")
 
