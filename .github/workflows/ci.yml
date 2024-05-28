@@ -39,7 +39,7 @@ jobs:
         run: black --check --exclude=migrations .
 
       - name: Run isort
-        run: isort --check-only .
+        run: isort --check-only --skip=migrations .
 
       - name: Run Flake8
         run: flake8 .
