@@ -1,13 +1,14 @@
 from django.core.mail import send_mail
 from django.http import HttpResponseRedirect
 from rest_framework.decorators import action
-from rest_framework.mixins import CreateModelMixin, ListModelMixin
+from rest_framework.mixins import CreateModelMixin
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from web_forms.submissions.models import Submission
+from web_forms.utils import format_dict_for_email
 
 from .serializers import SubmissionSerializer
 
@@ -23,8 +24,8 @@ class SubmissionViewSet(CreateModelMixin, GenericViewSet):
         instance = serializer.save()
 
         subject = "New Submission Received"
-        message = "A new submission has been received. Here are the details:\n\nAccess Key: {}\nData: {}".format(
-            instance.access_key.id, instance.data
+        message = "A new submission has been received. Here are the details:\n\nAccess Key: {}\n\n{}".format(
+            instance.access_key.id, format_dict_for_email(instance.data)
         )
         recipient_list = [instance.access_key.email]
         send_mail(
