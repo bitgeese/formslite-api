@@ -204,6 +204,6 @@ SPECTACULAR_SETTINGS["SERVERS"] = [
 # Railway
 CSRF_TRUSTED_ORIGINS = [
     "https://*.up.railway.app",
-    "https://www.formslite.io"
+    "https://www.formslite.io",
     # NOTE: Place your custom url here if any
 ]

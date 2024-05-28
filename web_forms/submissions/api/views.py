@@ -9,13 +9,14 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
+from web_forms.mixins import CsrfExemptMixin
 from web_forms.submissions.models import Submission
 from web_forms.utils import format_dict_for_email
 
 from .serializers import SubmissionSerializer
 
 
-class SubmissionViewSet(CreateModelMixin, GenericViewSet):
+class SubmissionViewSet(CsrfExemptMixin, CreateModelMixin, GenericViewSet):
     serializer_class = SubmissionSerializer
     queryset = Submission.objects.all()
     permission_classes = [AllowAny]
