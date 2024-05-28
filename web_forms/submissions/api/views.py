@@ -1,62 +1,55 @@
 from django.conf import settings
 from django.core.mail import EmailMultiAlternatives
-from django.http import HttpResponseRedirect
 from django.utils.html import format_html
-from rest_framework.decorators import action
-from rest_framework.mixins import CreateModelMixin
+from rest_framework import status
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
+from rest_framework.views import APIView
 
 from web_forms.authentication import CsrfExemptSessionAuthentication
-from web_forms.submissions.models import Submission
 from web_forms.utils import format_dict_for_email
 
 from .serializers import SubmissionSerializer
 
 
-class SubmissionViewSet(CreateModelMixin, GenericViewSet):
-    serializer_class = SubmissionSerializer
-    queryset = Submission.objects.all()
+class SubmissionView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = (CsrfExemptSessionAuthentication,)
     parser_classes = [FormParser, MultiPartParser]
-    lookup_field = "access_key__id"
 
-    def perform_create(self, serializer):
-        instance = serializer.save()
+    def post(self, request, *args, **kwargs):
+        serializer = SubmissionSerializer(data=request.data)
+        if serializer.is_valid():
+            access_key = serializer.validated_data["access_key"]
+            data = serializer.validated_data["data"]
 
-        subject = "New Submission Received"
-        text_content = (
-            "A new submission has been received. "
-            "Here are the details:\n\nAccess Key: {}\n\n{}".format(
-                instance.access_key.id, format_dict_for_email(instance.data)
+            subject = "New Submission Received"
+            text_content = (
+                "A new submission has been received. "
+                "Here are the details:\n\nAccess Key: {}\n\n{}".format(
+                    access_key.id, format_dict_for_email(data)
+                )
             )
-        )
-        html_content = format_html(
-            "<p>A new submission has been received.</p>"
-            "<p>Here are the details:</p>"
-            "<p>Access Key: {}</p>"
-            "<div>{}</div>".format(
-                instance.access_key.id, format_dict_for_email(instance.data)
+            html_content = format_html(
+                "<p>A new submission has been received.</p>"
+                "<p>Here are the details:</p>"
+                "<p>Access Key: {}</p>"
+                "<div>{}</div>".format(access_key.id, format_dict_for_email(data))
             )
-        )
 
-        recipient_list = [instance.access_key.email]
+            recipient_list = [access_key.email]
 
-        msg = EmailMultiAlternatives(
-            subject, text_content, settings.DEFAULT_FROM_EMAIL, recipient_list
-        )
-        msg.attach_alternative(html_content, "text/html")
-        msg.send(fail_silently=False)
+            msg = EmailMultiAlternatives(
+                subject, text_content, settings.DEFAULT_FROM_EMAIL, recipient_list
+            )
+            msg.attach_alternative(html_content, "text/html")
+            msg.send(fail_silently=False)
 
-    def create(self, request, *args, **kwargs):
-        super().create(request, *args, **kwargs)
-        return HttpResponseRedirect("https://www.formslite.io/success")
+            return Response(
+                {"message": "Email sent successfully"}, status=status.HTTP_200_OK
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=["get"], url_path="(?P<access_key_id>[^/.]+)")
-    def get_submissions_by_access_key(self, request, access_key_id):
-        submissions = self.queryset.filter(access_key_id=access_key_id)
-        serializer = self.get_serializer(submissions, many=True)
-        return Response(serializer.data)
+
+submission_view = SubmissionView.as_view()
