@@ -11,6 +11,8 @@ from web_forms.authentication import CsrfExemptSessionAuthentication
 from web_forms.utils import format_dict_for_email
 
 from .serializers import SubmissionSerializer
+from django.http import HttpResponseRedirect
+
 
 
 class SubmissionView(APIView):
@@ -46,9 +48,8 @@ class SubmissionView(APIView):
             msg.attach_alternative(html_content, "text/html")
             msg.send(fail_silently=False)
 
-            return Response(
-                {"message": "Email sent successfully"}, status=status.HTTP_200_OK
-            )
+            return HttpResponseRedirect("https://www.formslite.io/success")
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
