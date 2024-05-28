@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class AccessKeyViewSet(CreateModelMixin, GenericViewSet):
     serializer_class = AccessKeySerializer
     queryset = AccessKey.objects.all()
-    authentication_classes = (CsrfExemptSessionAuthentication,)
+    # authentication_classes = (CsrfExemptSessionAuthentication,)
     permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
