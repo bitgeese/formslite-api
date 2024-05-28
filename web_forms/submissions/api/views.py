@@ -1,4 +1,5 @@
 from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
 from rest_framework.decorators import action
 from rest_framework.mixins import CreateModelMixin, ListModelMixin
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -9,8 +10,6 @@ from rest_framework.viewsets import GenericViewSet
 from web_forms.submissions.models import Submission
 
 from .serializers import SubmissionSerializer
-from django.http import HttpResponseRedirect
-
 
 
 class SubmissionViewSet(CreateModelMixin, GenericViewSet):
@@ -29,12 +28,16 @@ class SubmissionViewSet(CreateModelMixin, GenericViewSet):
         )
         recipient_list = [instance.access_key.email]
         send_mail(
-            subject, message, "simpleforms@bitgeese.io", recipient_list, fail_silently=False
+            subject,
+            message,
+            "simpleforms@bitgeese.io",
+            recipient_list,
+            fail_silently=False,
         )
 
     def create(self, request, *args, **kwargs):
         super().create(request, *args, **kwargs)
-        return HttpResponseRedirect('https://web-forms-frontend.vercel.app/success')
+        return HttpResponseRedirect("https://web-forms-frontend.vercel.app/success")
 
     @action(detail=False, methods=["get"], url_path="(?P<access_key_id>[^/.]+)")
     def get_submissions_by_access_key(self, request, access_key_id=None):

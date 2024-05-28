@@ -22,5 +22,9 @@ class AccessKeyViewSet(CreateModelMixin, GenericViewSet):
         recipient_list = [instance.email]
         # TODO move to variable
         send_mail(
-            subject, message, "simpleforms@bitgeese.io", recipient_list, fail_silently=False
+            subject,
+            message,
+            "simpleforms@bitgeese.io",
+            recipient_list,
+            fail_silently=False,
         )

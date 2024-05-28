@@ -6,11 +6,12 @@ from .base import INSTALLED_APPS, MIDDLEWARE, env
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = ["*",
-                 "healthcheck.railway.app",
-                 "web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app"
-                 ]  # noqa: S104
-#ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["*"])
+ALLOWED_HOSTS = [
+    "*",
+    "healthcheck.railway.app",
+    "web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app",
+]  # noqa: S104
+# ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["*"])
 
 # CACHES
 # ------------------------------------------------------------------------------
@@ -65,5 +66,5 @@ CSRF_TRUSTED_ORIGINS = [
 
 CORS_ALLOWED_ORIGINS = [
     "https://*.up.railway.app",
-    "https://web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app"
+    "https://web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app",
 ]
