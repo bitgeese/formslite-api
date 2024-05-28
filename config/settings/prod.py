@@ -50,7 +50,7 @@ ANYMAIL = {
 ADMIN_URL = env("DJANGO_ADMIN_URL")
 
 # Collectfast
-INSTALLED_APPS = ["collectfast", *INSTALLED_APPS]
+# INSTALLED_APPS = ["collectfast", *INSTALLED_APPS]
 
 # Celery
 # ------------------------------------------------------------------------------
