@@ -17,9 +17,10 @@ class AccessKeyViewSet(CreateModelMixin, GenericViewSet):
     def perform_create(self, serializer):
         instance = serializer.save()
 
-        subject = "Your Web Form Access Keys!"
-        message = f"Here is your access keys: {instance.id}"
+        subject = "Your SimpleForms.io Access Key!"
+        message = f"Here is your access key: {instance.id}"
         recipient_list = [instance.email]
+        # TODO move to variable
         send_mail(
             subject, message, "simpleforms@bitgeese.io", recipient_list, fail_silently=False
         )
