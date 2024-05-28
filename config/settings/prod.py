@@ -62,7 +62,6 @@ CSRF_TRUSTED_ORIGINS = [
     "https://*.up.railway.app",
     "https://www.formslite.io",
     "https://formslite.io",
-    # NOTE: Place your custom url here if any
 ]
 
 CORS_ALLOWED_ORIGINS = [

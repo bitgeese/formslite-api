@@ -22,7 +22,6 @@ class AccessKeyViewSet(CreateModelMixin, GenericViewSet):
         subject = "Your FormsLite.io Access Key!"
         message = f"Here is your access key: {instance.id}"
         recipient_list = [instance.email]
-        # TODO move to variable
         send_mail(
             subject,
             message,
