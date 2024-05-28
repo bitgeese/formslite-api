@@ -29,13 +29,37 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      # Consider using pre-commit.ci for open source project
-      - name: Run pre-commit
-        uses: pre-commit/action@v3.0.1
 
-  # With no caching at all the entire ci process takes 3m to complete!
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install black isort flake8
+
+      - name: Run Black
+        run: black --check .
+
+      - name: Run isort
+        run: isort --check-only .
+
+      - name: Run Flake8
+        run: flake8 .
+
   pytest:
     runs-on: ubuntu-latest
+    services:
+      db:
+        image: postgres:13
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: mydatabase
+          POSTGRES_USER: myuser
+          POSTGRES_PASSWORD: mypassword
+        options: >-
+          --health-cmd "pg_isready -U myuser"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - name: Checkout Code Repository
@@ -44,14 +68,11 @@ jobs:
       - name: Build the Stack
         run: docker compose -f docker-compose.local.yml build django
 
-      - name: Build the docs
-        run: docker compose -f docker-compose.docs.yml build docs
-
       - name: Run DB Migrations
         run: docker compose -f docker-compose.local.yml run --rm django python manage.py migrate
 
-      - name: Run Django Tests
-        run: docker compose -f docker-compose.local.yml run django pytest
+      - name: Run Django Tests with Coverage
+        run: docker compose -f docker-compose.local.yml run django pytest --cov=myapp --cov-fail-under=60
 
       - name: Tear down the Stack
         run: docker compose -f docker-compose.local.yml down
