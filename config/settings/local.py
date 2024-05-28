@@ -15,6 +15,7 @@ SECRET_KEY = env(
 ALLOWED_HOSTS = [
     "*",
     "healthcheck.railway.app",
+    "formslite.io",
     "https://www.formslite.io",
 ]  # noqa: S104
 

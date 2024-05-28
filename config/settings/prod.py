@@ -8,7 +8,7 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [
     "*",
-    "https://www.formslite.io" "healthcheck.railway.app",
+    "https://www.formslite.io" "healthcheck.railway.app", "formslite.io"
 ]  # noqa: S104
 # ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["*"])
 
@@ -60,10 +60,11 @@ CELERY_TASK_EAGER_PROPAGATES = True
 CSRF_TRUSTED_ORIGINS = [
     "https://*.up.railway.app",
     "https://www.formslite.io",
+    "https://formslite.io",
     # NOTE: Place your custom url here if any
 ]
 
-CORS_ALLOWED_ORIGINS = ["https://*.up.railway.app", "https://www.formslite.io"]
+CORS_ALLOWED_ORIGINS = ["https://*.up.railway.app", "https://www.formslite.io", "https://formslite.io"]
 
 
 # LOGGING
