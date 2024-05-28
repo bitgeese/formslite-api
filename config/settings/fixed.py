@@ -60,7 +60,7 @@ CELERY_TASK_EAGER_PROPAGATES = True
 # ------------------------------------------------------------------------------
 CSRF_TRUSTED_ORIGINS = [
     "https://*.up.railway.app",
-    "https://web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app"
+    "https://web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app",
     # NOTE: Place your custom url here if any
 ]
 
