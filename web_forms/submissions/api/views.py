@@ -20,7 +20,7 @@ class SubmissionViewSet(CreateModelMixin, GenericViewSet):
     serializer_class = SubmissionSerializer
     queryset = Submission.objects.all()
     permission_classes = [AllowAny]
-    authentication_classes = CsrfExemptSessionAuthentication
+    authentication_classes = (CsrfExemptSessionAuthentication,)
     parser_classes = [FormParser, MultiPartParser]
     lookup_field = "access_key__id"
 

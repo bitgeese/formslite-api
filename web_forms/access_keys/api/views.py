@@ -5,6 +5,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import GenericViewSet
 
 from web_forms.access_keys.models import AccessKey
+from web_forms.authentication import CsrfExemptSessionAuthentication
 
 from .serializers import AccessKeySerializer
 
@@ -12,6 +13,7 @@ from .serializers import AccessKeySerializer
 class AccessKeyViewSet(CreateModelMixin, GenericViewSet):
     serializer_class = AccessKeySerializer
     queryset = AccessKey.objects.all()
+    authentication_classes = (CsrfExemptSessionAuthentication,)
     permission_classes = [AllowAny]
 
     def perform_create(self, serializer):
