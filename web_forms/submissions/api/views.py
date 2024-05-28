@@ -51,7 +51,7 @@ class SubmissionViewSet(CreateModelMixin, GenericViewSet):
 
     def create(self, request, *args, **kwargs):
         super().create(request, *args, **kwargs)
-        return HttpResponseRedirect("https://web-forms-frontend.vercel.app/success")
+        return HttpResponseRedirect("https://www.formslite.io/success")
 
     @action(detail=False, methods=["get"], url_path="(?P<access_key_id>[^/.]+)")
     def get_submissions_by_access_key(self, request, access_key_id):

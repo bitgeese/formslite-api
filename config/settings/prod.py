@@ -8,9 +8,8 @@ SECRET_KEY = env("DJANGO_SECRET_KEY")
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = [
     "*",
-    "web-forms-frontend.vercel.app",
+    "https://www.formslite.io"
     "healthcheck.railway.app",
-    "web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app",
 ]  # noqa: S104
 # ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=["*"])
 
@@ -61,13 +60,13 @@ CELERY_TASK_EAGER_PROPAGATES = True
 # ------------------------------------------------------------------------------
 CSRF_TRUSTED_ORIGINS = [
     "https://*.up.railway.app",
-    "https://web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app",
+    "https://www.formslite.io"
     # NOTE: Place your custom url here if any
 ]
 
 CORS_ALLOWED_ORIGINS = [
     "https://*.up.railway.app",
-    "https://web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app",
+    "https://www.formslite.io"
 ]
 
 
@@ -121,7 +120,7 @@ LOGGING = {
 # -------------------------------------------------------------------------------
 SPECTACULAR_SETTINGS["SERVERS"] = [
     {
-        "url": "https://django-production-14a3.up.railway.app",
+        "url": "https://api.formslite.io",
         "description": "Production server",
     },
 ]

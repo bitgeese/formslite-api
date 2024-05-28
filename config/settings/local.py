@@ -15,8 +15,7 @@ SECRET_KEY = env(
 ALLOWED_HOSTS = [
     "*",
     "healthcheck.railway.app",
-    "web-forms-frontend.vercel.app",
-    "web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app",
+    "https://www.formslite.io"
 ]  # noqa: S104
 
 # CACHES

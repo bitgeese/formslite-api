@@ -11,8 +11,7 @@ ALLOWED_HOSTS = [
     "*",
     "healthcheck.railway.app",
     "https://*.up.railway.app",
-    "web-forms-frontend.vercel.app",
-    "web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app",
+    "https://www.formslite.io",
 ]  # env.list("DJANGO_ALLOWED_HOSTS", default=["*"])
 
 # DATABASES
@@ -198,13 +197,13 @@ LOGGING = {
 # -------------------------------------------------------------------------------
 # Tools that generate code samples can use SERVERS to point to the correct domain
 SPECTACULAR_SETTINGS["SERVERS"] = [
-    {"url": "https://example.com", "description": "Production server"},
+    {"url": "https://api.formslite.io", "description": "Production server"},
 ]
 # Your stuff...
 # ------------------------------------------------------------------------------
 # Railway
 CSRF_TRUSTED_ORIGINS = [
     "https://*.up.railway.app",
-    "https://web-forms-frontend-git-main-maciej-janowskis-projects.vercel.app",
+    "https://www.formslite.io"
     # NOTE: Place your custom url here if any
 ]
