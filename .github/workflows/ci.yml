@@ -36,7 +36,7 @@ jobs:
           pip install black isort flake8
 
       - name: Run Black
-        run: black --check .
+        run: black --check --exclude=migrations .
 
       - name: Run isort
         run: isort --check-only .
