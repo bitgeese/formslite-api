@@ -1,6 +1,6 @@
 # ruff: noqa: E501
-from .base import *  # noqa: F403
-from .base import INSTALLED_APPS, MIDDLEWARE, env
+from .base import *  # noqa: F403, F401
+from .base import INSTALLED_APPS, SPECTACULAR_SETTINGS, env
 
 # GENERAL
 SECRET_KEY = env("DJANGO_SECRET_KEY")
@@ -84,7 +84,8 @@ LOGGING = {
     "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
     "formatters": {
         "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s",
+            "format": "%(levelname)s %(asctime)s %(module)s"
+            / " %(process)d %(thread)d %(message)s",
         },
     },
     "handlers": {

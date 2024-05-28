@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from web_forms.access_keys.api.serializers import AccessKeySerializer
 from web_forms.access_keys.models import AccessKey
 from web_forms.submissions.models import Submission
 
@@ -39,6 +38,7 @@ class SubmissionSerializer(serializers.ModelSerializer):
         Here, we omit the access_key in the output.
         """
         ret = super().to_representation(instance)
-        # You can choose to remove or alter the representation as needed, here we skip `access_key`
+        # You can choose to remove or alter the representation as needed,
+        # here we skip `access_key`
         ret.pop("access_key", None)
         return ret

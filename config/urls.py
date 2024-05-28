@@ -5,9 +5,7 @@ from django.contrib import admin
 from django.http import HttpResponse
 from django.urls import include, path
 from django.views import defaults as default_views
-from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
-from rest_framework.authtoken.views import obtain_auth_token
 
 
 def health_check(request):

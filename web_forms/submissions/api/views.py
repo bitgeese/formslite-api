@@ -24,8 +24,11 @@ class SubmissionViewSet(CreateModelMixin, GenericViewSet):
         instance = serializer.save()
 
         subject = "New Submission Received"
-        message = "A new submission has been received. Here are the details:\n\nAccess Key: {}\n\n{}".format(
-            instance.access_key.id, format_dict_for_email(instance.data)
+        message = (
+            "A new submission has been received. "
+            "Here are the details:\n\nAccess Key: {}\n\n{}".format(
+                instance.access_key.id, format_dict_for_email(instance.data)
+            )
         )
         recipient_list = [instance.access_key.email]
         send_mail(

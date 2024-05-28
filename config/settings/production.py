@@ -1,5 +1,5 @@
 # ruff: noqa: E501
-from .base import *  # noqa: F403
+from .base import *  # noqa: F403, F401
 from .base import DATABASES, INSTALLED_APPS, SPECTACULAR_SETTINGS, env
 
 # GENERAL
@@ -163,7 +163,8 @@ LOGGING = {
     "filters": {"require_debug_false": {"()": "django.utils.log.RequireDebugFalse"}},
     "formatters": {
         "verbose": {
-            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s",
+            "format": "%(levelname)s %(asctime)s %(module)s"
+            " %(process)d %(thread)d %(message)s",
         },
     },
     "handlers": {
