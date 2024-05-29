@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 
 class AccessKeyCreateAPIView(APIView):
     permission_classes = [AllowAny]
-    authentication_classes = (CsrfExemptSessionAuthentication,)
+    # authentication_classes = (CsrfExemptSessionAuthentication,)
     parser_classes = [FormParser, MultiPartParser, JSONParser]
 
     def post(self, request, *args, **kwargs):

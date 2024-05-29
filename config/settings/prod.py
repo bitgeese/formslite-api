@@ -59,16 +59,18 @@ CELERY_TASK_EAGER_PROPAGATES = True
 # Your stuff...
 # ------------------------------------------------------------------------------
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.up.railway.app",
     "https://www.formslite.io",
     "https://formslite.io",
+    "https://*.up.railway.app",
+    "https://api.formslite.io"
 ]
-
 CORS_ALLOWED_ORIGINS = [
-    "https://*.up.railway.app",
     "https://www.formslite.io",
     "https://formslite.io",
+    "https://*.up.railway.app",
+    "https://api.formslite.io"
 ]
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # LOGGING
@@ -126,6 +128,3 @@ SPECTACULAR_SETTINGS["SERVERS"] = [
     },
 ]
 
-
-CORS_ALLOW_ALL_ORIGINS = True
-CORS_ALLOW_CREDENTIALS = True

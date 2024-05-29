@@ -4,6 +4,8 @@
 from pathlib import Path
 
 import environ
+from corsheaders.defaults import default_headers, default_methods
+
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # web_forms/
@@ -295,15 +297,22 @@ REST_FRAMEWORK = {
 }
 
 # django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
-CORS_URLS_REGEX = r".*/api/.*$"
-# CORS_URLS_REGEX = r"^/api/.*$"
+# CORS_URLS_REGEX = r".*/api/.*$"
+CORS_URLS_REGEX = r"^/access-keys/|^/submission/"
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'Access-Control-Allow-Origin',
+]
+
+CORS_ALLOW_METHODS = list(default_methods) + [
+    'OPTIONS',
+]
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Web Forms API",
     "DESCRIPTION": "Documentation of API endpoints of Web Forms",
     "VERSION": "1.0.0",
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
-    "SCHEMA_PATH_PREFIX": "/api/",
+    # "SCHEMA_PATH_PREFIX": "/api/",
 }
 # Your stuff...
 # ------------------------------------------------------------------------------
