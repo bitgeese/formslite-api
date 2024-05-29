@@ -8,9 +8,10 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from web_forms.authentication import CsrfExemptSessionAuthentication
-
 from .serializers import AccessKeySerializer
+
+# from web_forms.authentication import CsrfExemptSessionAuthentication
+
 
 logger = logging.getLogger(__name__)
 
