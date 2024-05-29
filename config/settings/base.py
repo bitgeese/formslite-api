@@ -301,10 +301,16 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     "Access-Control-Allow-Origin",
 ]
 
-CORS_ALLOW_METHODS = list(default_methods) + [
-    "OPTIONS",
-]
+CORS_ALLOW_METHODS = ["POST","OPTIONS"]
 CORS_ALLOW_CREDENTIALS = False
+CORS_ALLOW_ALL_ORIGINS = True
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://www.formslite.io",
+    "https://formslite.io",
+    "https://*.up.railway.app",
+    "https://api.formslite.io",
+]
 
 SPECTACULAR_SETTINGS = {
     "TITLE": "Web Forms API",
