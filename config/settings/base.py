@@ -6,7 +6,6 @@ from pathlib import Path
 import environ
 from corsheaders.defaults import default_headers, default_methods
 
-
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # web_forms/
 APPS_DIR = BASE_DIR / "web_forms"
@@ -300,11 +299,11 @@ REST_FRAMEWORK = {
 # CORS_URLS_REGEX = r".*/api/.*$"
 CORS_URLS_REGEX = r"^/access-keys/|^/submission/"
 CORS_ALLOW_HEADERS = list(default_headers) + [
-    'Access-Control-Allow-Origin',
+    "Access-Control-Allow-Origin",
 ]
 
 CORS_ALLOW_METHODS = list(default_methods) + [
-    'OPTIONS',
+    "OPTIONS",
 ]
 
 SPECTACULAR_SETTINGS = {

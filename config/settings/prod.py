@@ -62,13 +62,13 @@ CSRF_TRUSTED_ORIGINS = [
     "https://www.formslite.io",
     "https://formslite.io",
     "https://*.up.railway.app",
-    "https://api.formslite.io"
+    "https://api.formslite.io",
 ]
 CORS_ALLOWED_ORIGINS = [
     "https://www.formslite.io",
     "https://formslite.io",
     "https://*.up.railway.app",
-    "https://api.formslite.io"
+    "https://api.formslite.io",
 ]
 CORS_ALLOW_ALL_ORIGINS = True
 
@@ -127,4 +127,3 @@ SPECTACULAR_SETTINGS["SERVERS"] = [
         "description": "Production server",
     },
 ]
-
