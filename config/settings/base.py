@@ -303,6 +303,7 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
 
 CORS_ALLOW_METHODS = ["POST", "OPTIONS"]
 CORS_ALLOW_CREDENTIALS = False
+CORS_ALLOW_ALL_ORIGINS = True
 
 CSRF_TRUSTED_ORIGINS = [
     "https://www.formslite.io",
@@ -318,5 +319,3 @@ SPECTACULAR_SETTINGS = {
     "SERVE_PERMISSIONS": ["rest_framework.permissions.IsAdminUser"],
     # "SCHEMA_PATH_PREFIX": "/api/",
 }
-# Your stuff...
-# ------------------------------------------------------------------------------
