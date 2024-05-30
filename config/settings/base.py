@@ -293,10 +293,12 @@ REST_FRAMEWORK = {
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_THROTTLE_RATES": {
+        "access_key": "3/day",
+        "submission": "5/hour",
+    },
 }
 
-# django-cors-headers - https://github.com/adamchainz/django-cors-headers#setup
-# CORS_URLS_REGEX = r".*/api/.*$"
 CORS_ALLOW_HEADERS = list(default_headers) + [
     "Access-Control-Allow-Origin",
 ]
