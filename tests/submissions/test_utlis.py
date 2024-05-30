@@ -1,6 +1,6 @@
 import pytest
 
-from web_forms.submissions.utils import format_dict_for_email
+from web_forms.submissions.utils.email import format_dict_for_email
 
 
 def test_format_dict_for_email_with_invalid_input():
