@@ -3,7 +3,9 @@ from .base import *  # noqa: F403, F401
 from .base import INSTALLED_APPS, MIDDLEWARE, env
 
 # API SETTINGS
-SUBMISSION_SUCCESS_URL = env("SUBMISSION_SUCCESS_URL", default="https://localhost:4321/success")
+SUBMISSION_SUCCESS_URL = env(
+    "SUBMISSION_SUCCESS_URL", default="https://localhost:4321/success"
+)
 
 # GENERAL
 # ------------------------------------------------------------------------------
