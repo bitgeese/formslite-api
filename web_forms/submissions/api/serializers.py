@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from web_forms.access_keys.models import AccessKey
+from web_forms.submissions.utils.ip import get_client_ip
 from web_forms.submissions.utils.spam_detection import is_spam
 
 
@@ -22,6 +23,10 @@ class SubmissionSerializer(serializers.Serializer):
         return access_key
 
     def validate(self, data):
+        if self.request:
+            ip_address = get_client_ip(self.request)
+            user_agent = self.request.META.get("HTTP_USER_AGENT")
+
         data_field = {k: v for k, v in self.initial_data.items() if k != "access_key"}
         if is_spam(data_field):
             raise serializers.ValidationError("Submission flagged as spam")
