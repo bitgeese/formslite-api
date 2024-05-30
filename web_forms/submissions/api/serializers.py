@@ -8,6 +8,10 @@ class SubmissionSerializer(serializers.Serializer):
     access_key = serializers.CharField()
     data = serializers.JSONField(required=False)
 
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs["context"].get("request")
+        super(SubmissionSerializer, self).__init__(*args, **kwargs)
+
     def validate_access_key(self, value):
         try:
             access_key = AccessKey.objects.get(id=value, is_active=True)

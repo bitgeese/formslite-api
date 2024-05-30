@@ -24,7 +24,9 @@ class SubmissionView(APIView):
     throttle_classes = [SubmissionRateThrottle]
 
     def post(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(
+            data=request.data, context={"request": request}
+        )
         if serializer.is_valid():
             self.handle_valid_submission(serializer)
             return HttpResponseRedirect(settings.SUBMISSION_SUCCESS_URL)
