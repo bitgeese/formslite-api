@@ -38,6 +38,22 @@ def test_submission_serializer_invalid_access_key():
 
 
 @pytest.mark.django_db
+def test_submission_serializer_access_key_disabled(access_key):
+    """Test that the serializer raises an error
+    when access key is disabled."""
+    access_key.soft_delete()
+    invalid_data = {
+        "access_key": str(access_key.id),
+        "field1": "value1",
+        "field2": "value2",
+    }
+    serializer = SubmissionSerializer(data=invalid_data)
+    with pytest.raises(ValidationError) as excinfo:
+        serializer.is_valid(raise_exception=True)
+    assert "Invalid access key provided" in str(excinfo.value)
+
+
+@pytest.mark.django_db
 def test_submission_serializer_usage_limit_exceeded(access_key):
     """Test that the serializer raises an error
     when access key usage limit is exceeded."""

@@ -9,7 +9,7 @@ class SubmissionSerializer(serializers.Serializer):
 
     def validate_access_key(self, value):
         try:
-            access_key = AccessKey.objects.get(id=value)
+            access_key = AccessKey.objects.get(id=value, is_active=True)
         except AccessKey.DoesNotExist:
             raise serializers.ValidationError("Invalid access key provided")
         if access_key.usage_limit_exceeded:
