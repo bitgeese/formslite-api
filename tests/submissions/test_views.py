@@ -52,23 +52,6 @@ def test_submission_view_missing_access_key(api_client):
 
 
 @pytest.mark.django_db
-def test_submission_view_optional_data_field(api_client, access_key):
-    """Test the SubmissionView with optional data field."""
-    url = reverse("api:submission")
-    data = {"access_key": access_key.id}
-    response = api_client.post(url, data, format="multipart")
-
-    assert response.status_code == status.HTTP_302_FOUND
-
-    # Check that an email was sent
-    assert len(mail.outbox) == 1
-    email = mail.outbox[0]
-    assert email.subject == "New Submission Received"
-    assert email.to == [access_key.email]
-    assert "Access Key: {}".format(access_key.id) in email.body
-
-
-@pytest.mark.django_db
 def test_submission_view_with_extra_fields(api_client, access_key):
     """Test the SubmissionView with extra fields in data."""
     url = reverse("api:submission")

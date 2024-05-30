@@ -2,7 +2,7 @@ HONEYPOT_FIELD = "topyenoh"
 
 
 def is_honeypot_triggered(form_data):
-    honeypot_field = form_data.get(HONEYPOT_FIELD)
+    honeypot_field = form_data.pop(HONEYPOT_FIELD, None)
     if honeypot_field:
         return True
 

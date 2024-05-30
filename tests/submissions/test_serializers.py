@@ -96,14 +96,13 @@ def test_submission_serializer_missing_access_key():
 
 
 @pytest.mark.django_db
-def test_submission_serializer_optional_data_field(access_key):
+def test_submission_serializer_no_data(access_key):
     """Test that the serializer is valid when the data field is omitted."""
-    valid_data = {"access_key": str(access_key.id)}
-    serializer = SubmissionSerializer(data=valid_data)
-    assert serializer.is_valid(), serializer.errors
-    assert serializer.validated_data["access_key"] == access_key
-    assert "data" in serializer.validated_data
-    assert serializer.validated_data["data"] == {}
+    invalid_data = {"access_key": str(access_key.id)}
+    serializer = SubmissionSerializer(data=invalid_data)
+    with pytest.raises(ValidationError) as excinfo:
+        serializer.is_valid(raise_exception=True)
+    assert "Submission has no fields" in str(excinfo.value)
 
 
 @pytest.mark.django_db

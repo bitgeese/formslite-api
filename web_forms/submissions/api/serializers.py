@@ -21,5 +21,7 @@ class SubmissionSerializer(serializers.Serializer):
         data_field = {k: v for k, v in self.initial_data.items() if k != "access_key"}
         if is_spam(data_field):
             raise serializers.ValidationError("Submission flagged as spam")
+        if not data_field:
+            raise serializers.ValidationError("Submission has no fields")
         data["data"] = data_field
         return data
