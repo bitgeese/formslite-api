@@ -2,6 +2,9 @@
 from .base import *  # noqa: F403, F401
 from .base import INSTALLED_APPS, MIDDLEWARE, env
 
+# API SETTINGS
+SUBMISSION_SUCCESS_URL = env("SUBMISSION_SUCCESS_URL", "https://localhost:4321/success")
+
 # GENERAL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#debug

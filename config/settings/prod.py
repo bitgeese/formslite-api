@@ -2,6 +2,9 @@
 from .base import *  # noqa: F403, F401
 from .base import INSTALLED_APPS, SPECTACULAR_SETTINGS, env
 
+# API SETTINGS
+SUBMISSION_SUCCESS_URL = env("SUBMISSION_SUCCESS_URL", "https://formslite.io/success")
+
 # GENERAL
 SECRET_KEY = env("DJANGO_SECRET_KEY")
 
