@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from web_forms.authentication import CsrfExemptSessionAuthentication
+from web_forms.throttles import AccessKeyCreateRateThrottle
 
 from .serializers import AccessKeySerializer
 
@@ -19,6 +20,7 @@ class AccessKeyCreateAPIView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = (CsrfExemptSessionAuthentication,)
     parser_classes = [FormParser, MultiPartParser, JSONParser]
+    throttle_classes = [AccessKeyCreateRateThrottle]
 
     def post(self, request, *args, **kwargs):
         serializer = AccessKeySerializer(data=request.data)

@@ -1,5 +1,6 @@
 import logging
 
+from django.conf import settings
 from django.http import HttpResponseRedirect
 from rest_framework import status
 from rest_framework.parsers import FormParser, MultiPartParser
@@ -8,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from web_forms.authentication import CsrfExemptSessionAuthentication
+from web_forms.throttles import SubmissionRateThrottle
 
 from ..utils import send_submission_email
 from .serializers import SubmissionSerializer
@@ -19,12 +21,13 @@ class SubmissionView(APIView):
     permission_classes = [AllowAny]
     authentication_classes = (CsrfExemptSessionAuthentication,)
     parser_classes = [FormParser, MultiPartParser]
+    throttle_classes = [SubmissionRateThrottle]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             self.handle_valid_submission(serializer)
-            return HttpResponseRedirect("https://www.formslite.io/success")
+            return HttpResponseRedirect(settings.SUBMISSION_SUCCESS_URL)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get_serializer(self, data):
