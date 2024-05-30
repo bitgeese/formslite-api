@@ -1,6 +1,8 @@
 import pytest
+from django.core.cache import cache
 from rest_framework.exceptions import ValidationError
 
+from web_forms.access_keys.models import MONTHLY_USE_LIMIT
 from web_forms.submissions.api.serializers import SubmissionSerializer
 
 
@@ -33,6 +35,22 @@ def test_submission_serializer_invalid_access_key():
         serializer.is_valid(raise_exception=True)
     print(excinfo.value)
     assert "Invalid access key provided" in str(excinfo.value)
+
+
+@pytest.mark.django_db
+def test_submission_serializer_usage_limit_exceeded(access_key):
+    """Test that the serializer raises an error
+    when access key usage limit is exceeded."""
+    cache.set(access_key.cache_key, MONTHLY_USE_LIMIT)
+    invalid_data = {
+        "access_key": str(access_key.id),
+        "field1": "value1",
+        "field2": "value2",
+    }
+    serializer = SubmissionSerializer(data=invalid_data)
+    with pytest.raises(ValidationError) as excinfo:
+        serializer.is_valid(raise_exception=True)
+    assert "Usage limit exceeded for key provided" in str(excinfo.value)
 
 
 @pytest.mark.django_db

@@ -4,7 +4,7 @@
 from pathlib import Path
 
 import environ
-from corsheaders.defaults import default_headers, default_methods
+from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # web_forms/

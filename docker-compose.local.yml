@@ -69,3 +69,14 @@ services:
     ports:
       - '5555:5555'
     command: /start-flower
+
+  astro:
+    build:
+      context: ../web_forms_frontend
+    image: web_forms_local_astro
+    container_name: web_forms_local_astro
+    ports:
+      - '4321:4321'
+    stdin_open: true
+    tty: true
+  

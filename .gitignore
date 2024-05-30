@@ -279,5 +279,3 @@ web_forms/media/
 .env
 .envs/*
 !.envs/.local/
-
-frontend/

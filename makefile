@@ -22,16 +22,16 @@ redis:
 	docker run -p 6379:6379 redis
 
 ## DOCKER COMMANDS
-docker-up:
+up:
 	docker-compose -f docker-compose.local.yml up -d
 
-docker-up-build:
+up-build:
 	docker-compose -f docker-compose.local.yml up -d --build
 
-docker-down:
+down:
 	docker-compose -f docker-compose.local.yml down
 
-docker-down-v:
+down-v:
 	docker-compose -f docker-compose.local.yml down -v
 
 createsuperuser:
