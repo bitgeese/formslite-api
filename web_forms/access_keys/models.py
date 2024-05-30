@@ -5,7 +5,7 @@ from django.db import models
 
 from web_forms.models import BaseModel
 
-KEY = "access_key_usage_{access_key_id}"
+USAGE_KEY = "access_key_usage_{access_key_id}"
 MONTHLY_USE_LIMIT = 300
 
 
@@ -28,13 +28,22 @@ class AccessKey(BaseModel):
             return cache.set(self.cache_key, 1)
         return cache.incr(self.cache_key)
 
+    def reset_usage(self):
+        return cache.set(self.cache_key, 0)
+
+    def set_usage(self, usage):
+        return cache.set(self.cache_key, usage)
+
     @property
     def usage_limit_exceeded(self):
-        used = cache.get(self.cache_key, 0)
-        if used >= MONTHLY_USE_LIMIT:
+        if self.usage >= MONTHLY_USE_LIMIT:
             return True
         return False
 
     @property
+    def usage(self):
+        return cache.get(self.cache_key, 0)
+
+    @property
     def cache_key(self):
-        return KEY.format(access_key_id=self.id)
+        return USAGE_KEY.format(access_key_id=self.id)

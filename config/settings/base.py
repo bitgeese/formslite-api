@@ -4,6 +4,7 @@
 from pathlib import Path
 
 import environ
+from celery.schedules import crontab
 from corsheaders.defaults import default_headers
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
@@ -282,6 +283,12 @@ CELERY_WORKER_SEND_TASK_EVENTS = True
 # https://docs.celeryq.dev/en/stable/userguide/configuration.html#std-setting-task_send_sent_event
 CELERY_TASK_SEND_SENT_EVENT = True
 
+CELERY_BEAT_SCHEDULE = {
+    "monthly-task": {
+        "task": "web_forms.access_keys.tasks.reset_access_key_usage",
+        "schedule": crontab(minute=0, hour=0, day_of_month=1),
+    },
+}
 
 # django-rest-framework
 # -------------------------------------------------------------------------------

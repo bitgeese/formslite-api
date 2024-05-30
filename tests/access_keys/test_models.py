@@ -62,3 +62,13 @@ def test_access_key_cache_key():
     access_key = AccessKey.objects.create(name="Test User", email="test@example.com")
     expected_cache_key = f"access_key_usage_{access_key.id}"
     assert access_key.cache_key == expected_cache_key
+
+
+@pytest.mark.django_db
+def test_access_key_reset_usage(access_key):
+    access_key.use_access_key()
+    access_key.use_access_key()
+    assert cache.get(access_key.cache_key) == 2
+
+    access_key.reset_usage()
+    assert cache.get(access_key.cache_key) == 0
