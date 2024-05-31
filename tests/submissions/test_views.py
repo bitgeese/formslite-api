@@ -3,9 +3,6 @@ from django.core import mail
 from django.urls import reverse
 from rest_framework import status
 
-from web_forms.access_keys.models import AccessKey
-from web_forms.access_keys.signals import send_access_key_created_email_to_admin
-
 
 @pytest.mark.django_db
 def test_submission_view_success(api_client, access_key):

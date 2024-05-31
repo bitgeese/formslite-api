@@ -50,7 +50,7 @@ class AccessKey(BaseModel):
 
     @property
     def usage_limit_exceeded(self):
-        if self.usage >= MONTHLY_USE_LIMIT:
+        if self.plan == PlanEnum.FREE.value and self.usage >= MONTHLY_USE_LIMIT:
             return True
         return False
 

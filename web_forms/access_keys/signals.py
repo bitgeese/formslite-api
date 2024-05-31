@@ -10,7 +10,8 @@ from .models import AccessKey
 def send_access_key_created_email_to_admin(sender, instance, created, **kwargs):
     if created:
         subject = "New AccessKey Created"
-        message = f"A new AccessKey has been created.\n\nDetails:\nAccessKey User: {instance.email}\nAccess Key: {instance.id}"
+        message = "A new AccessKey has been created.\n\nDetails:\nAccessKey "
+        f"User: {instance.email}\nAccess Key: {instance.id}"
         from_email = settings.DEFAULT_FROM_EMAIL
         recipient_list = [admin[1] for admin in settings.ADMINS]
         send_mail(subject, message, from_email, recipient_list)
