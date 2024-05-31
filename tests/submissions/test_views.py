@@ -2,12 +2,9 @@ import pytest
 from django.core import mail
 from django.urls import reverse
 from rest_framework import status
-from rest_framework.test import APIClient
 
-
-@pytest.fixture
-def api_client():
-    return APIClient()
+from web_forms.access_keys.models import AccessKey
+from web_forms.access_keys.signals import send_access_key_created_email_to_admin
 
 
 @pytest.mark.django_db
@@ -20,8 +17,8 @@ def test_submission_view_success(api_client, access_key):
     assert response.status_code == status.HTTP_302_FOUND
 
     # Check that an email was sent
-    assert len(mail.outbox) == 1
-    email = mail.outbox[0]
+    assert len(mail.outbox) == 2
+    email = mail.outbox[-1]
     assert email.subject == "New Submission Received"
     assert email.to == [access_key.email]
     assert "Access Key: {}".format(access_key.id) in email.body
@@ -65,8 +62,8 @@ def test_submission_view_with_extra_fields(api_client, access_key):
     assert response.status_code == status.HTTP_302_FOUND
 
     # Check that an email was sent
-    assert len(mail.outbox) == 1
-    email = mail.outbox[0]
+    assert len(mail.outbox) == 2
+    email = mail.outbox[-1]
     assert email.subject == "New Submission Received"
     assert email.to == [access_key.email]
     assert "Access Key: {}".format(access_key.id) in email.body
