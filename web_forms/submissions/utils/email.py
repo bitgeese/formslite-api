@@ -1,5 +1,7 @@
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives, send_mail
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils.html import format_html
 
 
@@ -48,3 +50,11 @@ def send_submission_email(access_key, data):
     )
     msg.attach_alternative(html_content, "text/html")
     msg.send(fail_silently=False)
+
+
+def send_usage_limit_reached_email(access_key):
+    subject = "Usage Limit Reached"
+    message = f"Access Key: {access_key.id} ({access_key.email}) reached usage limit, wait until the end of the month for it to reset, or upgrade your access key"
+    from_email = settings.DEFAULT_FROM_EMAIL
+    recipient_list = [admin[1] for admin in settings.ADMINS] + [access_key.email]
+    send_mail(subject, message, from_email, recipient_list)

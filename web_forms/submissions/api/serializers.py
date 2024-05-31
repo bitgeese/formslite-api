@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from web_forms.access_keys.models import AccessKey
+from web_forms.submissions.utils.email import send_usage_limit_reached_email
 from web_forms.submissions.utils.spam_detection import is_spam
 
 
@@ -14,6 +15,7 @@ class SubmissionSerializer(serializers.Serializer):
         except AccessKey.DoesNotExist:
             raise serializers.ValidationError("Invalid access key provided")
         if access_key.usage_limit_exceeded:
+            send_usage_limit_reached_email(access_key)
             raise serializers.ValidationError("Usage limit exceeded for key provided")
         return access_key
 
