@@ -1,4 +1,5 @@
 import uuid
+from enum import Enum
 
 from django.core.cache import cache
 from django.db import models
@@ -9,11 +10,24 @@ USAGE_KEY = "access_key_usage_{access_key_id}"
 MONTHLY_USE_LIMIT = 300
 
 
+class PlanEnum(Enum):
+    FREE = "free"
+    PLUS = "plus"
+    ELITE = "elite"
+
+    @classmethod
+    def choices(cls):
+        return [(key.value, key.name.title()) for key in cls]
+
+
 class AccessKey(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=125)
     email = models.EmailField()
     is_active = models.BooleanField(default=True)
+    plan = models.CharField(
+        max_length=10, choices=PlanEnum.choices(), default=PlanEnum.FREE.value
+    )
 
     def soft_delete(self):
         self.is_active = False
@@ -36,7 +50,7 @@ class AccessKey(BaseModel):
 
     @property
     def usage_limit_exceeded(self):
-        if self.usage >= MONTHLY_USE_LIMIT:
+        if self.plan == PlanEnum.FREE.value and self.usage >= MONTHLY_USE_LIMIT:
             return True
         return False
 
