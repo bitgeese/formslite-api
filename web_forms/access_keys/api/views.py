@@ -29,7 +29,7 @@ class AccessKeyCreateAPIView(APIView):
 
             subject = "Your FormsLite.io Access Key!"
             message = f"Here is your access key: {instance.id}"
-            recipient_list = [instance.email]
+            recipient_list = [instance.user.email]
             send_mail(
                 subject,
                 message,

@@ -1,9 +1,25 @@
 from rest_framework import serializers
 
-from web_forms.access_keys.models import AccessKey
+from web_forms.access_keys.models import AccessKey, SimpleUser
+
+
+class EmailRelatedField(serializers.RelatedField):
+    def to_representation(self, value):
+        return value.email
+
+    def to_internal_value(self, data):
+        user_email, created = SimpleUser.objects.get_or_create(email=data)
+        return user_email
 
 
 class AccessKeySerializer(serializers.ModelSerializer):
+    user = EmailRelatedField(queryset=SimpleUser.objects.all())
+
     class Meta:
         model = AccessKey
-        fields = ["id", "name", "email"]
+        fields = ["id", "name", "user"]
+
+    def create(self, validated_data):
+        user = validated_data.pop("user")
+        access_key = AccessKey.objects.create(user=user, **validated_data)
+        return access_key

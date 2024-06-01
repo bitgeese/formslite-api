@@ -6,16 +6,16 @@ from web_forms.access_keys.tasks import reset_access_key_usage
 
 
 @pytest.mark.django_db
-def test_reset_access_key_usage():
+def test_reset_access_key_usage(simple_user):
     # Create active AccessKey instances
     access_key1 = AccessKey.objects.create(
-        name="Key1", email="key1@example.com", is_active=True
+        name="Key1", user=simple_user, is_active=True
     )
     access_key2 = AccessKey.objects.create(
-        name="Key2", email="key2@example.com", is_active=True
+        name="Key2", user=simple_user, is_active=True
     )
     inactive_key = AccessKey.objects.create(
-        name="Key3", email="key3@example.com", is_active=False
+        name="Key3", user=simple_user, is_active=False
     )
 
     # Set some usage values in cache
