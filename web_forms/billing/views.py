@@ -36,6 +36,7 @@ class StripeWebhookView(APIView):
         # Handle the event
         if event["type"] == "payment_intent.succeeded":
             session = event["data"]["object"]
+            # TODO session['"receipt_email"]
             logger.info(session)
         else:
             print("Unhandled event type {}".format(event["type"]))

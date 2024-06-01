@@ -20,6 +20,10 @@ class PlanEnum(Enum):
         return [(key.value, key.name.title()) for key in cls]
 
 
+class EmailUser(BaseModel):
+    email = models.EmailField()
+
+
 class AccessKey(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=125)
