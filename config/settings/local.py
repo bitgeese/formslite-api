@@ -78,5 +78,8 @@ CELERY_TASK_EAGER_PROPAGATES = True
 # Your stuff...
 # ------------------------------------------------------------------------------
 
-STRIPE_SECRET_KEY = "sk_test_51PMJytP7ONwv6j65viEmHUk1gw8VmfwjPOjj2hiCcUH9neaj1GYJbRWmTIvtOaJokJb4kNhmy6FK3YfqwxkyEvxk00qPGSaVm5"
+STRIPE_SECRET_KEY = (
+    "sk_test_51PMJytP7ONwv6j65viEmHUk1gw8VmfwjPOjj2hiCcUH9neaj1GYJbRWmTI"
+    "vtOaJokJb4kNhmy6FK3YfqwxkyEvxk00qPGSaVm5"
+)
 STRIPE_WEBHOOK_SECRET = "whsec_ttXWsX4B1qdcKbdtKTYb1686y1ptG4qQ"

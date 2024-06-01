@@ -3,7 +3,6 @@ import logging
 import stripe
 from django.conf import settings
 from django.http import JsonResponse
-from django.views import View
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
@@ -42,28 +41,15 @@ class StripeWebhookView(APIView):
             simple_user.plan = PlanEnum.PLUS.value
             simple_user.stripe_subscription_id = subscription_id
             simple_user.save()
-
-        # elif event['type'] == 'invoice.payment_failed':
-        #     invoice = event['data']['object']
-        #     customer_id = invoice['customer']
-        #     email = invoice['customer_email']
-        #     # Match the email with the user and update the subscription plan to free
-        #     user = User.objects.get(email=email)
-        #     if user:
-        #         user.subscription_plan = 'free'
-        #         user.save()
-
-        # elif event['type'] == 'customer.subscription.updated':
-        #     subscription = event['data']['object']
-        #     # Log the renewal or any other updates if necessary
-        #     # For example, you might want to store the updated plan details
-        #     customer_id = subscription['customer']
-        #     subscription_id = subscription['id']
-        #     email = subscription['customer_email']
-        #     user = User.objects.get(email=email)
-        #     if user:
-        #         # Log the renewal or update in your logs or analytics
-        #         print(f"Subscription {subscription_id} for user {user.email} was updated.")
+        elif event["type"] == "invoice.payment_failed":
+            invoice = event["data"]["object"]
+            # customer_id = invoice['customer']
+            email = invoice["customer_email"]
+            # Match the email with the user and update the subscription plan to free
+            simple_user = SimpleUser.objects.get(email=email)
+            if simple_user:
+                simple_user.plan = PlanEnum.FREE.value
+                simple_user.save()
 
         return JsonResponse({"status": "success"}, status=200)
 
