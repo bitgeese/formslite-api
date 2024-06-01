@@ -21,13 +21,13 @@ class PlanEnum(Enum):
 
 
 class SimpleUser(BaseModel):
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
 
 
 class AccessKey(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=125)
-    email = models.ForeignKey(SimpleUser, on_delete=models.CASCADE, related_name="keys")
+    user = models.ForeignKey(SimpleUser, on_delete=models.CASCADE, related_name="keys")
     is_active = models.BooleanField(default=True)
     plan = models.CharField(
         max_length=10, choices=PlanEnum.choices(), default=PlanEnum.FREE.value

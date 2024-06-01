@@ -5,5 +5,5 @@ from .models import AccessKey
 
 @admin.register(AccessKey)
 class AccessKeyAdmin(admin.ModelAdmin):
-    list_display = ["id", "name", "email"]
-    search_fields = ["email"]
+    list_display = ["id", "name", "user"]
+    search_fields = ["user"]

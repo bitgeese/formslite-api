@@ -17,7 +17,7 @@ def test_submission_view_success(api_client, access_key):
     assert len(mail.outbox) == 2
     email = mail.outbox[-1]
     assert email.subject == "New Submission Received"
-    assert email.to == [access_key.email]
+    assert email.to == [access_key.user.email]
     assert "Access Key: {}".format(access_key.id) in email.body
     assert "<li><strong>Field1:</strong> value1</li>" in email.body
     assert "<li><strong>Field2:</strong> value2</li>" in email.body
@@ -62,7 +62,7 @@ def test_submission_view_with_extra_fields(api_client, access_key):
     assert len(mail.outbox) == 2
     email = mail.outbox[-1]
     assert email.subject == "New Submission Received"
-    assert email.to == [access_key.email]
+    assert email.to == [access_key.user.email]
     assert "Access Key: {}".format(access_key.id) in email.body
     assert "<li><strong>Extra Field1:</strong> extra_value1</li>" in email.body
     assert "<li><strong>Extra Field2:</strong> extra_value2</li>" in email.body

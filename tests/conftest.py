@@ -16,5 +16,5 @@ def access_key(db) -> AccessKey:
 
 
 @pytest.fixture()
-def access_key(db) -> SimpleUser:
+def simple_user(db) -> SimpleUser:
     return SimpleUserFactory()

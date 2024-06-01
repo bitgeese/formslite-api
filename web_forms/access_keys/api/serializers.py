@@ -3,19 +3,26 @@ from rest_framework import serializers
 from web_forms.access_keys.models import AccessKey, SimpleUser
 
 
-class SimpleUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = SimpleUser
-        fields = ["email"]
 
+class EmailRelatedField(serializers.RelatedField):
+    def to_representation(self, value):
+        return value.email
+
+    def to_internal_value(self, data):
+        try:
+            user_email, created = SimpleUser.objects.get_or_create(email=data)
+            return user_email
+        except SimpleUser.DoesNotExist:
+            raise serializers.ValidationError("User email does not exist")
 
 class AccessKeySerializer(serializers.ModelSerializer):
+    user = EmailRelatedField(queryset=SimpleUser.objects.all())
+
     class Meta:
         model = AccessKey
-        fields = ["id", "name", "email"]
+        fields = ["id", "name", "user"]
 
     def create(self, validated_data):
-        email_data = validated_data.pop("email")
-        user_email, created = SimpleUser.objects.get_or_create(**email_data)
-        access_key = AccessKey.objects.create(email=user_email, **validated_data)
+        user = validated_data.pop('user')
+        access_key = AccessKey.objects.create(user=user, **validated_data)
         return access_key
