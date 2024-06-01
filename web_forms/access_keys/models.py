@@ -26,6 +26,11 @@ class SimpleUser(BaseModel):
         max_length=10, choices=PlanEnum.choices(), default=PlanEnum.FREE.value
     )
 
+    def upgrade_to_plus_plan(self):
+        if self.plan != PlanEnum.PLUS.value:
+            self.plan = PlanEnum.PLUS.value
+            self.save()
+
 
 class AccessKey(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)

@@ -8,7 +8,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from web_forms.access_keys.models import SimpleUser
+from web_forms.access_keys.models import PlanEnum, SimpleUser
 
 logger = logging.getLogger(__name__)
 # Ensure the key is kept out of any version control system you might be using.
@@ -40,7 +40,8 @@ class StripeWebhookView(APIView):
             session = event["data"]["object"]
             logger.info(session)
             client_email = session["receipt_email"]
-            SimpleUser.objects.get_or_create(email=client_email)
+            simple_user = SimpleUser.objects.get_or_create(email=client_email)
+            simple_user.upgrade_to_plus_plan()
         else:
             print("Unhandled event type {}".format(event["type"]))
 
