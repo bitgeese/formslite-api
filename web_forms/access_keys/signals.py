@@ -1,9 +1,18 @@
 from django.conf import settings
 from django.core.mail import send_mail
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
-from .models import AccessKey
+from .models import AccessKey, SimpleUser
+
+
+@receiver(pre_save, sender=AccessKey)
+def create_user_email(sender, instance, **kwargs):
+    if not SimpleUser.objects.filter(email=instance.email.email).exists():
+        user_email, created = SimpleUser.objects.get_or_create(
+            email=instance.email.email
+        )
+        instance.email = user_email
 
 
 @receiver(post_save, sender=AccessKey)

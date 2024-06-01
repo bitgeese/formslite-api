@@ -1,8 +1,8 @@
 import pytest
 from rest_framework.test import APIClient
 
-from tests.submissions.factories import AccessKeyFactory
-from web_forms.access_keys.models import AccessKey
+from tests.factories import AccessKeyFactory, SimpleUserFactory
+from web_forms.access_keys.models import AccessKey, SimpleUser
 
 
 @pytest.fixture
@@ -13,3 +13,8 @@ def api_client():
 @pytest.fixture()
 def access_key(db) -> AccessKey:
     return AccessKeyFactory()
+
+
+@pytest.fixture()
+def access_key(db) -> SimpleUser:
+    return SimpleUserFactory()
