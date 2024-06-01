@@ -8,11 +8,8 @@ class EmailRelatedField(serializers.RelatedField):
         return value.email
 
     def to_internal_value(self, data):
-        try:
-            user_email, created = SimpleUser.objects.get_or_create(email=data)
-            return user_email
-        except SimpleUser.DoesNotExist:
-            raise serializers.ValidationError("User email does not exist")
+        user_email, created = SimpleUser.objects.get_or_create(email=data)
+        return user_email
 
 
 class AccessKeySerializer(serializers.ModelSerializer):

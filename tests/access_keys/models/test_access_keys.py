@@ -1,11 +1,7 @@
 import pytest
 from django.core.cache import cache
 
-from web_forms.access_keys.models import (
-    MONTHLY_USE_LIMIT,
-    AccessKey,
-    PlanEnum,
-)
+from web_forms.access_keys.models import MONTHLY_USE_LIMIT, AccessKey, PlanEnum
 
 
 @pytest.mark.django_db
