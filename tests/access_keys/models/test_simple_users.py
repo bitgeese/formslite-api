@@ -1,5 +1,4 @@
 import pytest
-from django.core.cache import cache
 
 from web_forms.access_keys.models import SimpleUser
 

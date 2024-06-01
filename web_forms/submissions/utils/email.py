@@ -52,7 +52,9 @@ def send_submission_email(access_key, data):
 
 def send_usage_limit_reached_email(access_key):
     subject = "Usage Limit Reached"
-    message = f"Access Key: {access_key.id} ({access_key.user.email}) reached usage limit, "
+    message = (
+        f"Access Key: {access_key.id} ({access_key.user.email}) reached usage limit, "
+    )
     "wait until the end of the month for it to reset, or upgrade your access key"
     from_email = settings.DEFAULT_FROM_EMAIL
     recipient_list = [admin[1] for admin in settings.ADMINS] + [access_key.user.email]

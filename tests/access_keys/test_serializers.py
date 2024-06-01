@@ -21,4 +21,4 @@ def test_access_key_serializer_validation(simple_user):
     data = {"name": "Test User", "user": simple_user.email}
     serializer = AccessKeySerializer(data=data)
     assert serializer.is_valid()
-    assert serializer.validated_data == {'name': 'Test User', 'user': simple_user}
+    assert serializer.validated_data == {"name": "Test User", "user": simple_user}
