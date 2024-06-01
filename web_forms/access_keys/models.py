@@ -22,6 +22,9 @@ class PlanEnum(Enum):
 
 class SimpleUser(BaseModel):
     email = models.EmailField(unique=True)
+    plan = models.CharField(
+        max_length=10, choices=PlanEnum.choices(), default=PlanEnum.FREE.value
+    )
 
 
 class AccessKey(BaseModel):
@@ -29,9 +32,6 @@ class AccessKey(BaseModel):
     name = models.CharField(max_length=125)
     user = models.ForeignKey(SimpleUser, on_delete=models.CASCADE, related_name="keys")
     is_active = models.BooleanField(default=True)
-    plan = models.CharField(
-        max_length=10, choices=PlanEnum.choices(), default=PlanEnum.FREE.value
-    )
 
     def soft_delete(self):
         self.is_active = False
@@ -54,7 +54,7 @@ class AccessKey(BaseModel):
 
     @property
     def usage_limit_exceeded(self):
-        if self.plan == PlanEnum.FREE.value and self.usage >= MONTHLY_USE_LIMIT:
+        if self.user.plan == PlanEnum.FREE.value and self.usage >= MONTHLY_USE_LIMIT:
             return True
         return False
 

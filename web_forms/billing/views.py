@@ -8,6 +8,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from web_forms.access_keys.models import SimpleUser
+
 logger = logging.getLogger(__name__)
 # Ensure the key is kept out of any version control system you might be using.
 stripe.api_key = "sk_test_51PMJytP7ONwv6j65viEmHUk1gw8VmfwjPOjj2hiCcUH9neaj1GYJbRWmTIvtOaJokJb4kNhmy6FK3YfqwxkyEvxk00qPGSaVm5"
@@ -36,8 +38,9 @@ class StripeWebhookView(APIView):
         # Handle the event
         if event["type"] == "payment_intent.succeeded":
             session = event["data"]["object"]
-            # TODO session['"receipt_email"]
             logger.info(session)
+            client_email = session["receipt_email"]
+            SimpleUser.objects.get_or_create(email=client_email)
         else:
             print("Unhandled event type {}".format(event["type"]))
 
