@@ -12,3 +12,5 @@ REDIS_URL=redis://redis:6379/0
 # Flower
 CELERY_FLOWER_USER=hqIJBxYTdhrPQYIVeRSMfSMXDmOuCmRi
 CELERY_FLOWER_PASSWORD=gAaiuiwH3Yyr8GvQAyLh0345rhndG1pRq66wc0G4pkhqDttQweWi1iLRRDFnXbkg
+
+ADMIN_EMAIL=maciekjanowski42@icloud.com
