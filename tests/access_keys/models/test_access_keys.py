@@ -1,8 +1,7 @@
 import pytest
 from django.core.cache import cache
 
-from web_forms.access_keys.models import (MONTHLY_USE_LIMIT, AccessKey,
-                                          PlanEnum, SimpleUser)
+from web_forms.access_keys.models import AccessKey, PlanEnum, SimpleUser
 
 
 @pytest.mark.django_db
@@ -51,10 +50,10 @@ def test_access_key_usage_increment(simple_user):
 def test_access_key_usage_limit_exceeded(simple_user):
     access_key = AccessKey.objects.create(name="Test User", user=simple_user)
 
-    cache.set(access_key.cache_key, MONTHLY_USE_LIMIT - 1)
+    cache.set(access_key.cache_key, AccessKey.MONTHLY_USE_LIMIT - 1)
     assert not access_key.usage_limit_exceeded
 
-    cache.set(access_key.cache_key, MONTHLY_USE_LIMIT)
+    cache.set(access_key.cache_key, AccessKey.MONTHLY_USE_LIMIT)
     assert access_key.usage_limit_exceeded
 
 
@@ -82,8 +81,8 @@ def test_access_key_usage_limit_exceeded_not_triggered_for_plus_user():
     )
     access_key = AccessKey.objects.create(name="Test User", user=simple_user)
 
-    cache.set(access_key.cache_key, MONTHLY_USE_LIMIT - 1)
+    cache.set(access_key.cache_key, AccessKey.MONTHLY_USE_LIMIT - 1)
     assert not access_key.usage_limit_exceeded
 
-    cache.set(access_key.cache_key, MONTHLY_USE_LIMIT)
+    cache.set(access_key.cache_key, AccessKey.MONTHLY_USE_LIMIT)
     assert not access_key.usage_limit_exceeded

@@ -7,7 +7,6 @@ from django.db import models
 from web_forms.models import BaseModel
 
 USAGE_KEY = "access_key_usage_{access_key_id}"
-MONTHLY_USE_LIMIT = 300
 
 
 class PlanEnum(Enum):
@@ -36,6 +35,7 @@ class SimpleUser(BaseModel):
 
 
 class AccessKey(BaseModel):
+    MONTHLY_USE_LIMIT = 300
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=125)
     user = models.ForeignKey(SimpleUser, on_delete=models.CASCADE, related_name="keys")
@@ -62,7 +62,10 @@ class AccessKey(BaseModel):
 
     @property
     def usage_limit_exceeded(self):
-        if self.user.plan == PlanEnum.FREE.value and self.usage >= MONTHLY_USE_LIMIT:
+        if (
+            self.user.plan == PlanEnum.FREE.value
+            and self.usage >= self.MONTHLY_USE_LIMIT
+        ):
             return True
         return False
 

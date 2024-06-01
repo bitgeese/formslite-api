@@ -2,7 +2,7 @@ import pytest
 from django.core.cache import cache
 from rest_framework.exceptions import ValidationError
 
-from web_forms.access_keys.models import MONTHLY_USE_LIMIT
+from web_forms.access_keys.models import AccessKey
 from web_forms.submissions.api.serializers import SubmissionSerializer
 from web_forms.submissions.utils.spam_detection import HONEYPOT_FIELD
 
@@ -74,7 +74,7 @@ def test_submission_serializer_spam_detected_honypot(access_key):
 def test_submission_serializer_usage_limit_exceeded(access_key):
     """Test that the serializer raises an error
     when access key usage limit is exceeded."""
-    cache.set(access_key.cache_key, MONTHLY_USE_LIMIT)
+    cache.set(access_key.cache_key, AccessKey.MONTHLY_USE_LIMIT)
     invalid_data = {
         "access_key": str(access_key.id),
         "field1": "value1",
