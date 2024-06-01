@@ -3,49 +3,69 @@ import logging
 import stripe
 from django.conf import settings
 from django.http import JsonResponse
-from rest_framework import status
+from django.views import View
 from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from web_forms.access_keys.models import PlanEnum, SimpleUser
 
 logger = logging.getLogger(__name__)
-# Ensure the key is kept out of any version control system you might be using.
-stripe.api_key = "sk_test_51PMJytP7ONwv6j65viEmHUk1gw8VmfwjPOjj2hiCcUH9neaj1GYJbRWmTIvtOaJokJb4kNhmy6FK3YfqwxkyEvxk00qPGSaVm5"
 
-# This is your Stripe CLI webhook secret for testing your endpoint locally.
-endpoint_secret = "whsec_ttXWsX4B1qdcKbdtKTYb1686y1ptG4qQ"
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 class StripeWebhookView(APIView):
     permission_classes = [AllowAny]
 
-    def post(self, request, format=None):
+    def post(self, request, *args, **kwargs):
         payload = request.body
         sig_header = request.META["HTTP_STRIPE_SIGNATURE"]
-        event = None
+        endpoint_secret = settings.STRIPE_WEBHOOK_SECRET
 
         try:
             event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
         except ValueError as e:
-            # Invalid payload
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({"error": str(e)}, status=400)
         except stripe.error.SignatureVerificationError as e:
-            # Invalid signature
-            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({"error": str(e)}, status=400)
 
         # Handle the event
-        if event["type"] == "payment_intent.succeeded":
-            session = event["data"]["object"]
-            logger.info(session)
-            client_email = session["receipt_email"]
-            simple_user = SimpleUser.objects.get_or_create(email=client_email)
-            simple_user.upgrade_to_plus_plan()
-        else:
-            print("Unhandled event type {}".format(event["type"]))
+        logger.info(event["type"])
+        if event["type"] == "invoice.payment_succeeded":
+            invoice = event["data"]["object"]
+            logger.info(invoice)
+            # customer_id = invoice['customer']
+            subscription_id = invoice["subscription"]
+            email = invoice["customer_email"]
+            # Match the email with the user and update the subscription plan to paid
+            simple_user, _ = SimpleUser.objects.get_or_create(email=email)
+            simple_user.plan = PlanEnum.PLUS.value
+            simple_user.stripe_subscription_id = subscription_id
+            simple_user.save()
 
-        return Response({"success": True}, status=status.HTTP_200_OK)
+        # elif event['type'] == 'invoice.payment_failed':
+        #     invoice = event['data']['object']
+        #     customer_id = invoice['customer']
+        #     email = invoice['customer_email']
+        #     # Match the email with the user and update the subscription plan to free
+        #     user = User.objects.get(email=email)
+        #     if user:
+        #         user.subscription_plan = 'free'
+        #         user.save()
+
+        # elif event['type'] == 'customer.subscription.updated':
+        #     subscription = event['data']['object']
+        #     # Log the renewal or any other updates if necessary
+        #     # For example, you might want to store the updated plan details
+        #     customer_id = subscription['customer']
+        #     subscription_id = subscription['id']
+        #     email = subscription['customer_email']
+        #     user = User.objects.get(email=email)
+        #     if user:
+        #         # Log the renewal or update in your logs or analytics
+        #         print(f"Subscription {subscription_id} for user {user.email} was updated.")
+
+        return JsonResponse({"status": "success"}, status=200)
 
 
 stripe_webhook_view = StripeWebhookView.as_view()

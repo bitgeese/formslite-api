@@ -1,6 +1,6 @@
 import pytest
 
-from web_forms.access_keys.models import SimpleUser, PlanEnum
+from web_forms.access_keys.models import PlanEnum, SimpleUser
 
 
 @pytest.mark.django_db

@@ -25,6 +25,9 @@ class SimpleUser(BaseModel):
     plan = models.CharField(
         max_length=10, choices=PlanEnum.choices(), default=PlanEnum.FREE.value
     )
+    stripe_subscription_id = models.CharField(
+        unique=True, max_length=125, null=True, blank=True
+    )
 
     def upgrade_to_plus_plan(self):
         if self.plan != PlanEnum.PLUS.value:
