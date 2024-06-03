@@ -2,6 +2,7 @@ import logging
 
 import stripe
 from django.conf import settings
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
@@ -41,6 +42,16 @@ class StripeWebhookView(APIView):
             simple_user.plan = PlanEnum.PLUS.value
             simple_user.stripe_subscription_id = subscription_id
             simple_user.save()
+
+            # send notification
+            subject = "You have PLUS plan"
+            message = (
+                "You have bought/renewed the plus plan."
+                "Your access keys now have access to plus features."
+            )
+            from_email = settings.DEFAULT_FROM_EMAIL
+            send_mail(subject, message, from_email, [simple_user.email])
+
         elif event["type"] == "invoice.payment_failed":
             invoice = event["data"]["object"]
             # customer_id = invoice['customer']
@@ -50,6 +61,15 @@ class StripeWebhookView(APIView):
             if simple_user:
                 simple_user.plan = PlanEnum.FREE.value
                 simple_user.save()
+
+                # send notification
+                subject = "PLUS plan renewal failed"
+                message = (
+                    "Renewal payment failed, you are on freeplan"
+                    "Renew payment here: <>"
+                )
+                from_email = settings.DEFAULT_FROM_EMAIL
+                send_mail(subject, message, from_email, [simple_user.email])
 
         return JsonResponse({"status": "success"}, status=200)
 
