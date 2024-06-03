@@ -2,6 +2,7 @@ import logging
 
 from django.conf import settings
 from django.core.mail import send_mail
+from django.http import HttpResponseRedirect
 from rest_framework import status
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from rest_framework.permissions import AllowAny
@@ -37,7 +38,7 @@ class AccessKeyCreateAPIView(APIView):
                 recipient_list,
                 fail_silently=False,
             )
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return HttpResponseRedirect("https://formslite.io")
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
