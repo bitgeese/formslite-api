@@ -1,3 +1,4 @@
+from django.conf import settings
 from rest_framework import serializers
 
 from web_forms.access_keys.models import AccessKey
@@ -7,6 +8,7 @@ from web_forms.submissions.utils.spam_detection import is_spam
 
 class SubmissionSerializer(serializers.Serializer):
     access_key = serializers.CharField()
+    redirect = serializers.URLField(default=settings.SUBMISSION_SUCCESS_URL)
     data = serializers.JSONField(required=False)
 
     def validate_access_key(self, value):
