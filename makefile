@@ -35,35 +35,35 @@ down-v:
 	docker-compose -f docker-compose.local.yml down -v
 
 createsuperuser:
-	docker-compose -f docker-compose.local.yml run django python manage.py createsuperuser
+	docker-compose -f docker-compose.local.yml run --rm django python manage.py createsuperuser
 
 makemigrations:
-	docker-compose -f docker-compose.local.yml run django python manage.py makemigrations
+	docker-compose -f docker-compose.local.yml run --rm django python manage.py makemigrations
 
 migrate:
-	docker-compose -f docker-compose.local.yml run django python manage.py migrate
+	docker-compose -f docker-compose.local.yml run --rm django python manage.py migrate
 
 black:
-	docker-compose -f docker-compose.local.yml run django black --exclude=migrations .
+	docker-compose -f docker-compose.local.yml run --rm django black --exclude=migrations .
 
 isort:
-	docker-compose -f docker-compose.local.yml run django isort --skip=migrations .
+	docker-compose -f docker-compose.local.yml run --rm django isort --skip=migrations .
 
 flake8:
-	docker-compose -f docker-compose.local.yml run django flake8 .
+	docker-compose -f docker-compose.local.yml run --rm django flake8 .
 
 test:
-	docker-compose -f docker-compose.local.yml run django pytest --cov=web_forms --cov-fail-under=60 --cov-report=term-missing
+	docker-compose -f docker-compose.local.yml run --rm django pytest --cov=web_forms --cov-fail-under=60 --cov-report=term-missing
 
 ## ADDITIONAL COMMANDS
 shell:
-	docker-compose -f docker-compose.local.yml run django python manage.py shell
+	docker-compose -f docker-compose.local.yml run --rm django python manage.py shell
 
 makemessages:
-	docker-compose -f docker-compose.local.yml run django python manage.py makemessages -l en
+	docker-compose -f docker-compose.local.yml run --rm django python manage.py makemessages -l en
 
 compilemessages:
-	docker-compose -f docker-compose.local.yml run django python manage.py compilemessages
+	docker-compose -f docker-compose.local.yml run --rm django python manage.py compilemessages
 
 collectstatic:
-	docker-compose -f docker-compose.local.yml run django python manage.py collectstatic --noinput
+	docker-compose -f docker-compose.local.yml run --rm django python manage.py collectstatic --noinput
