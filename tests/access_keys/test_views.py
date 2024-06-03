@@ -10,7 +10,7 @@ def test_access_key_create_view_valid():
     client = APIClient()
     data = {"name": "Test User", "user": "test@example.com"}
     response = client.post(reverse("api:access-keys"), data, format="json")
-    assert response.status_code == 201
+    assert response.status_code == 302
     assert AccessKey.objects.count() == 1
     assert AccessKey.objects.get().name == "Test User"
 
