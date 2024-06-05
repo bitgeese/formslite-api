@@ -2,6 +2,14 @@ from django.conf import settings
 from django.core.mail import EmailMultiAlternatives, send_mail
 from django.utils.html import format_html
 
+from web_forms.submissions.utils.spam_detection import HONEYPOT_FIELD
+
+SKIP_FIELDS = [
+    "redirect",
+    "access_key",
+    HONEYPOT_FIELD,
+]
+
 
 def format_dict_for_email(data_dict):
     """
@@ -16,6 +24,8 @@ def format_dict_for_email(data_dict):
     formatted_text = ["<h2>Submission Details</h2>", "<ul>"]
 
     for key, value in data_dict.items():
+        if key.lower() in SKIP_FIELDS:
+            continue
         formatted_key = key.replace("_", " ").title()
         formatted_value = str(value).replace("\n", "<br>")
         formatted_text.append(
