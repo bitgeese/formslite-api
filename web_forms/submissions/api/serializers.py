@@ -2,8 +2,8 @@ from django.conf import settings
 from rest_framework import serializers
 
 from web_forms.access_keys.models import AccessKey
-from web_forms.submissions.utils.email import send_usage_limit_reached_email
 from web_forms.submissions.utils.spam_detection import is_spam
+from web_forms.utils.emails import send_usage_limit_reached_email
 
 
 class SubmissionSerializer(serializers.Serializer):
