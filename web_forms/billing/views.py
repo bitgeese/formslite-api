@@ -26,7 +26,7 @@ class StripeWebhookView(APIView):
         if not event:
             return JsonResponse({"error": "Invalid event"}, status=400)
 
-        logger.info(f"Received event: {event['type']}")
+        logger.info("Received event: %s", event["type"])
 
         event_handlers = {
             "invoice.payment_succeeded": self._handle_payment_succeeded,
@@ -43,7 +43,7 @@ class StripeWebhookView(APIView):
         try:
             return stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
         except (ValueError, stripe.error.SignatureVerificationError) as e:
-            logger.error(f"Error constructing event: {str(e)}")
+            logger.exception("Error constructing event: %s", str(e))
             return None
 
     def _handle_payment_succeeded(self, event):
@@ -70,13 +70,11 @@ class StripeWebhookView(APIView):
     def _handle_payment_failed(self, event):
         invoice = event["data"]["object"]
         email = invoice.get("customer_email")
-
         if email:
             try:
                 simple_user = SimpleUser.objects.get(email=email)
                 simple_user.plan = PlanEnum.FREE.value
                 simple_user.save()
-
                 self._send_email(
                     subject="PLUS plan renewal failed",
                     message=(
@@ -86,7 +84,7 @@ class StripeWebhookView(APIView):
                     recipient_list=[simple_user.email],
                 )
             except SimpleUser.DoesNotExist:
-                logger.error(f"User with email {email} does not exist")
+                logger.exception("User with email %s does not exist", email)
 
     def _send_email(self, subject, message, recipient_list):
         from_email = settings.DEFAULT_FROM_EMAIL
