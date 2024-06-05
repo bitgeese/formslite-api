@@ -1,4 +1,4 @@
-HONEYPOT_FIELD = "topyenoh"
+HONEYPOT_FIELD = "honeycomb"
 
 
 def is_honeypot_triggered(form_data):

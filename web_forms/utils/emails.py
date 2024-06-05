@@ -37,7 +37,10 @@ def format_dict_for_email(data_dict):
 
 
 def send_submission_email(access_key, data):
-    subject = "New Submission Received"
+    if "subject" in data:
+        subject = data["subject"]
+    else:
+        subject = "New Submission Received"
     text_content = (
         "A new submission has been received. "
         "Here are the details:\n\nAccess Key: {}\n\n{}".format(
