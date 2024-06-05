@@ -52,7 +52,7 @@ def test_submission_view_with_extra_fields(api_client, access_key):
     data = {
         "access_key": access_key.id,
         "extra_field1": "extra_value1",
-        "extra_field2": "extra_value2",
+        "subject": "Custom Subject",
     }
     response = api_client.post(url, data, format="multipart")
 
@@ -61,8 +61,8 @@ def test_submission_view_with_extra_fields(api_client, access_key):
     # Check that an email was sent
     assert len(mail.outbox) == 2
     email = mail.outbox[-1]
-    assert email.subject == "New Submission Received"
+    assert email.subject == data["subject"]
     assert email.to == [access_key.user.email]
     assert "Access Key: {}".format(access_key.id) in email.body
     assert "<li><strong>Extra Field1:</strong> extra_value1</li>" in email.body
-    assert "<li><strong>Extra Field2:</strong> extra_value2</li>" in email.body
+    assert "<li><strong>Subject:</strong> Custom Subject</li>" in email.body
