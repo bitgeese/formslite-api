@@ -1,6 +1,6 @@
 import pytest
 
-from web_forms.submissions.utils.email import format_dict_for_email
+from web_forms.utils.emails import format_dict_for_email
 
 
 def test_format_dict_for_email_with_invalid_input():
@@ -19,6 +19,7 @@ def test_format_dict_for_email_with_typical_data():
         "name": "John Doe",
         "user": "john@example.com",
         "message": "Hello, this is a test message.",
+        "redirect": "https://example.com/success",
     }
     result = format_dict_for_email(data_dict)
     expected_output = (

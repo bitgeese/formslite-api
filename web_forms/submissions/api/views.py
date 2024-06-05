@@ -9,8 +9,8 @@ from rest_framework.views import APIView
 
 from web_forms.authentication import CsrfExemptSessionAuthentication
 from web_forms.throttles import SubmissionRateThrottle
+from web_forms.utils.emails import send_submission_email
 
-from ..utils.email import send_submission_email
 from .serializers import SubmissionSerializer
 
 logger = logging.getLogger(__name__)
