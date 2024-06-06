@@ -55,6 +55,7 @@ def test_submission_view_with_extra_fields(api_client, access_key):
         "subject": "Custom Subject",
         "reply_to": "custom@example.com",
         "from_name": "Jeff",
+        "cc_emails": "partner@example.com;accounts@example.com",
     }
     response = api_client.post(url, data, format="multipart")
 
