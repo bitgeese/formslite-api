@@ -53,6 +53,8 @@ def test_submission_view_with_extra_fields(api_client, access_key):
         "access_key": access_key.id,
         "extra_field1": "extra_value1",
         "subject": "Custom Subject",
+        "reply_to": "custom@example.com",
+        "from_name": "Jeff",
     }
     response = api_client.post(url, data, format="multipart")
 
@@ -66,3 +68,5 @@ def test_submission_view_with_extra_fields(api_client, access_key):
     assert "Access Key: {}".format(access_key.id) in email.body
     assert "<li><strong>Extra Field1:</strong> extra_value1</li>" in email.body
     assert "<li><strong>Subject:</strong> Custom Subject</li>" in email.body
+    assert "Jeff" in email.from_email
+    assert "custom@example.com" in email.reply_to

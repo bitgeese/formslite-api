@@ -356,3 +356,8 @@ SPECTACULAR_SETTINGS = {
 }
 
 SUBMISSION_SUCCESS_URL = "https://www.formslite.io/success"
+
+DEFAULT_FROM_EMAIL_ADDR = env(
+    "DJANGO_DEFAULT_FROM_EMAIL", default="contact@formslite.io"
+)
+DEFAULT_FROM_EMAIL = f"FormsLite.io <{DEFAULT_FROM_EMAIL_ADDR}>"

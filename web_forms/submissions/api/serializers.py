@@ -9,6 +9,8 @@ from web_forms.utils.emails import send_usage_limit_reached_email
 class SubmissionSerializer(serializers.Serializer):
     access_key = serializers.CharField()
     redirect = serializers.URLField(default=settings.SUBMISSION_SUCCESS_URL)
+    from_name = serializers.CharField(required=False)
+    reply_to = serializers.EmailField(required=False)
     data = serializers.JSONField(required=False)
 
     def validate_access_key(self, value):

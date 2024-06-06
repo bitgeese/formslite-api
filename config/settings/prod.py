@@ -1,6 +1,6 @@
 # ruff: noqa: E501
 from .base import *  # noqa: F403, F401
-from .base import INSTALLED_APPS, SPECTACULAR_SETTINGS, env
+from .base import DEFAULT_FROM_EMAIL, INSTALLED_APPS, SPECTACULAR_SETTINGS, env
 
 # API SETTINGS
 SUBMISSION_SUCCESS_URL = env(
@@ -36,10 +36,7 @@ CACHES = {
 # EMAIL
 # ------------------------------------------------------------------------------
 INSTALLED_APPS += ["anymail"]
-DEFAULT_FROM_EMAIL = env(
-    "DJANGO_DEFAULT_FROM_EMAIL",
-    default="FormsLite.io <contact@formslite.io>",
-)
+
 SERVER_EMAIL = env("DJANGO_SERVER_EMAIL", default=DEFAULT_FROM_EMAIL)
 EMAIL_SUBJECT_PREFIX = env(
     "DJANGO_EMAIL_SUBJECT_PREFIX",
