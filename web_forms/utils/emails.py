@@ -9,6 +9,7 @@ SKIP_FIELDS = [
     "access_key",
     "from_name",
     "reply_to",
+    "cc_emails",
     HONEYPOT_FIELD,
 ]
 
@@ -38,7 +39,8 @@ def format_dict_for_email(data_dict):
     return "\n".join(formatted_text)
 
 
-def send_submission_email(access_key, data):
+def send_submission_email(access_key, validated_data):
+    data = validated_data["data"]
     if "subject" in data:
         subject = data["subject"]
     else:
@@ -59,14 +61,24 @@ def send_submission_email(access_key, data):
     recipient_list = [access_key.user.email]
 
     from_email = settings.DEFAULT_FROM_EMAIL
-    from_name = data.get("from_name")
+    from_name = validated_data.get("from_name")
     if from_name:
         from_email = f"{from_name} <{settings.DEFAULT_FROM_EMAIL_ADDR}>"
 
-    reply_to = [data.get("reply_to")] if data.get("reply_to") else None
+    reply_to = (
+        [validated_data.get("reply_to")] if validated_data.get("reply_to") else None
+    )
+
+    cc_emails = validated_data.get("cc_emails", [])
+    print("DUPA:", cc_emails)
 
     msg = EmailMultiAlternatives(
-        subject, text_content, from_email, recipient_list, reply_to=reply_to
+        subject,
+        text_content,
+        from_email,
+        recipient_list,
+        reply_to=reply_to,
+        cc=cc_emails,
     )
     msg.attach_alternative(html_content, "text/html")
     msg.send(fail_silently=False)

@@ -34,8 +34,7 @@ class SubmissionView(APIView):
 
     def handle_valid_submission(self, serializer):
         access_key = serializer.validated_data["access_key"]
-        data = serializer.validated_data["data"]
-        send_submission_email(access_key, data)
+        send_submission_email(access_key, serializer.validated_data)
         access_key.use_access_key()
 
 
