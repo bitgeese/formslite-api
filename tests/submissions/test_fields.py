@@ -53,7 +53,6 @@ def test_to_internal_value_invalid_email(input_value):
     field = SemicolonSeparatedEmailField()
     with pytest.raises(ValidationError) as excinfo:
         field.to_internal_value(input_value)
-    print("DUPA", str(excinfo.value))
     assert "Enter a valid email address" in str(excinfo.value)
 
 
