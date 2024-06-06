@@ -7,6 +7,8 @@ from web_forms.submissions.utils.spam_detection import HONEYPOT_FIELD
 SKIP_FIELDS = [
     "redirect",
     "access_key",
+    "from_name",
+    "reply_to",
     HONEYPOT_FIELD,
 ]
 
@@ -56,8 +58,15 @@ def send_submission_email(access_key, data):
 
     recipient_list = [access_key.user.email]
 
+    from_email = settings.DEFAULT_FROM_EMAIL
+    from_name = data.get("from_name")
+    if from_name:
+        from_email = f"{from_name} <{settings.DEFAULT_FROM_EMAIL_ADDR}>"
+
+    reply_to = [data.get("reply_to")] if data.get("reply_to") else None
+
     msg = EmailMultiAlternatives(
-        subject, text_content, settings.DEFAULT_FROM_EMAIL, recipient_list
+        subject, text_content, from_email, recipient_list, reply_to=reply_to
     )
     msg.attach_alternative(html_content, "text/html")
     msg.send(fail_silently=False)
