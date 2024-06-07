@@ -3,7 +3,6 @@ from typing import Optional
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.mail import send_mail
-from django.urls import reverse
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
@@ -13,11 +12,9 @@ from web_forms.access_keys.models import SimpleUser
 def send_sign_in_email(user: SimpleUser) -> None:
     token = default_token_generator.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    verification_link = reverse(
-        "dashboard:verify_email", kwargs={"uidb64": uid, "token": token}
-    )
+    verification_link = f"https://api.formslite.io/verify-email/{uid}/{token}/"
 
-    subject = "Verify your email address 🚀"
+    subject = "Your login link ⚡️"
     message = (
         "Hi there 🙂\n"
         "Please click "
