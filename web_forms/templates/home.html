@@ -3,8 +3,58 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    <div class="container mx-auto p-4">
-        <h1 class="text-4xl font-bold">Welcome to My Django Project</h1>
-        <p class="mt-4">This is a sample page using TailwindCSS, DaisyUI, and Alpine.js.</p>
+    
+
+
+    <div class="flex flex-col w-full border-opacity-50">
+
+        
+        <div class="divider">PLUS FEATURES</div>
+
+        <div class="overflow-hidden rounded-lg bg-base-200 shadow">
+            <div class="px-4 py-5 sm:p-6 space-y-4">
+                <div class="form-control max-w-xs">
+                    <label class="cursor-pointer label">
+                      <span class="label-text font-semibold">Auto Responder</span> 
+                      <input type="checkbox" class="toggle toggle-primary" checked />
+                    </label>
+                </div>
+                <label class="form-control w-full">
+                    <div class="label">
+                      <span class="label-text">From Name</span>
+                    </div>
+                    <input type="text" name="from_name" placeholder="From Name (Company Name)" class="input input-bordered w-full" />
+                </label>
+                <label class="form-control w-full">
+                    <div class="label">
+                      <span class="label-text">Subject</span>
+                    </div>
+                    <input type="text" name="subject" placeholder="Autoresponder Subject" class="input input-bordered w-full" />
+                </label>
+                <label class="form-control">
+                    <div class="label">
+                      <span class="label-text">Intro Text</span>
+                    </div>
+                    <textarea class="textarea textarea-bordered h-24" name="intro" placeholder="Autoresponder Intro Text"></textarea>
+                </label>
+                <div class="form-control max-w-xs">
+                    <label class="cursor-pointer label">
+                      <span class="label-text font-semibold">Include Submission Copy</span> 
+                      <input type="checkbox" class="toggle toggle-primary" checked />
+                    </label>
+                </div>
+            </div>
+        </div>
+
+
+
+        </div>
+
+    
+
     </div>
+
+    
+
+
 {% endblock %}
