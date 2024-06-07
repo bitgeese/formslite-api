@@ -13,11 +13,12 @@ from web_forms.access_keys.models import SimpleUser
 def send_sign_in_email(user: SimpleUser) -> None:
     token = default_token_generator.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    verification_link = reverse(
+    verification_link = f"https://api.formslite.io/verify-email/{uid}/{token}/"
+    reverse(
         "dashboard:verify_email", kwargs={"uidb64": uid, "token": token}
     )
 
-    subject = "Verify your email address 🚀"
+    subject = "Your login link ⚡️"
     message = (
         "Hi there 🙂\n"
         "Please click "
