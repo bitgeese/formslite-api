@@ -1,25 +1,28 @@
 import uuid
 from enum import Enum
 
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.cache import cache
 from django.db import models
 
 from web_forms.models import BaseModel
+from web_forms.utils.emails import send_auto_respond
+
+from .managers import SimpleUserManager
 
 USAGE_KEY = "access_key_usage_{access_key_id}"
 
 
-class PlanEnum(Enum):
-    FREE = "free"
-    PLUS = "plus"
-    ELITE = "elite"
+class SimpleUser(AbstractBaseUser, PermissionsMixin):
+    class PlanEnum(Enum):
+        FREE = "free"
+        PLUS = "plus"
+        ELITE = "elite"
 
-    @classmethod
-    def choices(cls):
-        return [(key.value, key.name.title()) for key in cls]
+        @classmethod
+        def choices(cls):
+            return [(key.value, key.name.title()) for key in cls]
 
-
-class SimpleUser(BaseModel):
     email = models.EmailField(unique=True)
     plan = models.CharField(
         max_length=10, choices=PlanEnum.choices(), default=PlanEnum.FREE.value
@@ -27,11 +30,30 @@ class SimpleUser(BaseModel):
     stripe_subscription_id = models.CharField(
         unique=True, max_length=125, null=True, blank=True
     )
+    auto_reply = models.BooleanField(default=False)
+
+    has_verified_email = models.BooleanField(default=False)
+
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+
+    objects = SimpleUserManager()
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+
+    def auto_respond(self, submission_data):
+        if self.plan != self.PlanEnum.FREE.value and self.auto_reply:
+            send_auto_respond(submission_data)
 
     def upgrade_to_plus_plan(self):
-        if self.plan != PlanEnum.PLUS.value:
-            self.plan = PlanEnum.PLUS.value
+        if self.plan != self.PlanEnum.PLUS.value:
+            self.plan = self.PlanEnum.PLUS.value
             self.save()
+
+    def __str__(self):
+        return self.email
 
 
 class AccessKey(BaseModel):
@@ -63,7 +85,7 @@ class AccessKey(BaseModel):
     @property
     def usage_limit_exceeded(self):
         if (
-            self.user.plan == PlanEnum.FREE.value
+            self.user.plan == SimpleUser.PlanEnum.FREE.value
             and self.usage >= self.MONTHLY_USE_LIMIT
         ):
             return True

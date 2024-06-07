@@ -81,6 +81,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    "web_forms.dashboard",
     "web_forms.access_keys",
     "web_forms.submissions",
     "web_forms.billing",
@@ -361,3 +362,5 @@ DEFAULT_FROM_EMAIL_ADDR = env(
     "DJANGO_DEFAULT_FROM_EMAIL", default="contact@formslite.io"
 )
 DEFAULT_FROM_EMAIL = f"FormsLite.io <{DEFAULT_FROM_EMAIL_ADDR}>"
+
+AUTH_USER_MODEL = "access_keys.SimpleUser"
