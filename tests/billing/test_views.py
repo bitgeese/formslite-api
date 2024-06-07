@@ -7,7 +7,7 @@ import stripe
 from django.conf import settings
 from django.urls import reverse
 
-from web_forms.access_keys.models import PlanEnum, SimpleUser
+from web_forms.access_keys.models import SimpleUser
 
 
 @pytest.fixture
@@ -55,7 +55,7 @@ def test_invoice_payment_succeeded(
     assert response.json() == {"status": "success"}
 
     user = SimpleUser.objects.get(email="test@example.com")
-    assert user.plan == PlanEnum.PLUS.value
+    assert user.plan == SimpleUser.PlanEnum.PLUS.value
     assert user.stripe_subscription_id == "sub_12345"
     mock_send_email.assert_called_once_with(
         subject="You have PLUS plan",
@@ -72,7 +72,9 @@ def test_invoice_payment_failed(
     mock_send_email, mock_construct_event, client, stripe_webhook_url
 ):
     # Create a user first
-    user = SimpleUser.objects.create(email="test@example.com", plan=PlanEnum.PLUS.value)
+    user = SimpleUser.objects.create(
+        email="test@example.com", plan=SimpleUser.PlanEnum.PLUS.value
+    )
 
     payload = {
         "type": "invoice.payment_failed",
@@ -91,7 +93,7 @@ def test_invoice_payment_failed(
     assert response.json() == {"status": "success"}
 
     user.refresh_from_db()
-    assert user.plan == PlanEnum.FREE.value
+    assert user.plan == SimpleUser.PlanEnum.FREE.value
     mock_send_email.assert_called_once_with(
         subject="PLUS plan renewal failed",
         message="Renewal payment failed, you are now on the free plan."

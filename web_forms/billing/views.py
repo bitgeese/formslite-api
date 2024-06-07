@@ -7,7 +7,7 @@ from django.http import JsonResponse
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 
-from web_forms.access_keys.models import PlanEnum, SimpleUser
+from web_forms.access_keys.models import SimpleUser
 
 logger = logging.getLogger(__name__)
 
@@ -54,7 +54,7 @@ class StripeWebhookView(APIView):
 
         if email:
             simple_user, _ = SimpleUser.objects.get_or_create(email=email)
-            simple_user.plan = PlanEnum.PLUS.value
+            simple_user.plan = SimpleUser.PlanEnum.PLUS.value
             simple_user.stripe_subscription_id = subscription_id
             simple_user.save()
 
@@ -73,7 +73,7 @@ class StripeWebhookView(APIView):
         if email:
             try:
                 simple_user = SimpleUser.objects.get(email=email)
-                simple_user.plan = PlanEnum.FREE.value
+                simple_user.plan = SimpleUser.PlanEnum.FREE.value
                 simple_user.save()
                 self._send_email(
                     subject="PLUS plan renewal failed",
