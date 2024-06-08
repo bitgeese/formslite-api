@@ -38,6 +38,8 @@ class SendSignInEmail(View):
         email = request.POST["email"]
         try:
             user = SimpleUser.objects.get(email=email)
+            if not user.is_paid:
+                return redirect("https://formslite.io/pricing")
         except SimpleUser.DoesNotExist:
             return render(
                 request,
@@ -78,7 +80,6 @@ def home(request: HttpRequest) -> HttpResponse:
             form1 = AutoRespondSettingsForm(instance=settings_instance)
             form2 = NotionLinkForm()
 
-        print(request.user.notion_links.all())
         return render(
             request,
             "home.html",
