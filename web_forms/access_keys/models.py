@@ -8,6 +8,7 @@ from django.db import models
 
 from web_forms.models import BaseModel
 from web_forms.utils.emails import send_auto_respond
+from web_forms.utils.notion_integration import NotionClient
 
 from .managers import SimpleUserManager
 
@@ -27,8 +28,11 @@ class UserSettings(models.Model):
     auto_responder_subject = models.CharField(
         max_length=125, default="Auto Responder Email Subject"
     )
-    auto_responder_intro_text = models.TextField(null=True, blank=True, default="")
+    auto_responder_intro_text = models.TextField(blank=True, default="")
     auto_responder_include_copy = models.BooleanField(default=True)
+
+    # notion integration settings
+    notion_token = models.CharField(max_length=255, blank=True, default="")
 
 
 class SimpleUser(AbstractBaseUser, PermissionsMixin):
@@ -45,9 +49,7 @@ class SimpleUser(AbstractBaseUser, PermissionsMixin):
     plan = models.CharField(
         max_length=10, choices=PlanEnum.choices(), default=PlanEnum.FREE.value
     )
-    stripe_subscription_id = models.CharField(
-        unique=True, max_length=125, null=True, blank=True
-    )
+    stripe_subscription_id = models.CharField(max_length=125, default="", blank=True)
     auto_reply = models.BooleanField(default=False)
 
     has_verified_email = models.BooleanField(default=False)
@@ -62,7 +64,7 @@ class SimpleUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     def auto_respond(self, submission_data):
-        if self.plan != self.PlanEnum.FREE.value and self.auto_reply:
+        if self.is_paid and self.auto_reply:
             send_auto_respond(submission_data, self.settings)
 
     def upgrade_to_plus_plan(self):
@@ -72,6 +74,14 @@ class SimpleUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    @property
+    def is_paid(self):
+        return self.plan != self.PlanEnum.FREE.value
+
+    @property
+    def notion_client(self):
+        return NotionClient(token=self.settings.notion_token)
 
 
 class AccessKey(BaseModel):
@@ -116,3 +126,27 @@ class AccessKey(BaseModel):
     @property
     def cache_key(self):
         return USAGE_KEY.format(access_key_id=self.id)
+
+    def send_to_notion(self, submission_data):
+        if (
+            self.user.is_paid
+        ):  # TODO: update condition to chek if notion integration exiss
+            for link in self.notion_links.all():
+                self.user.notion_client.add_row_to_database(
+                    database_id=link.database_id,
+                    data=submission_data,
+                )
+
+
+class NotionLink(models.Model):
+    user = models.ForeignKey(
+        SimpleUser, on_delete=models.CASCADE, related_name="notion_links"
+    )
+    database_id = models.CharField(max_length=125)
+    database_name = models.CharField(max_length=125)
+    access_key = models.ForeignKey(
+        AccessKey, on_delete=models.CASCADE, related_name="notion_links"
+    )
+
+    def __str__(self):
+        return f"{self.database_name} - {self.access_key.id}"

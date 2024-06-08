@@ -25,3 +25,4 @@ drf-spectacular==0.27.2  # https://github.com/tfranzel/drf-spectacular
 
 django_extensions==3.2.3
 stripe==9.10.0
+notion-client==2.2.1

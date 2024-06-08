@@ -70,7 +70,6 @@ def send_submission_email(access_key, validated_data):
     )
 
     cc_emails = validated_data.get("cc_emails", [])
-    print("DUPA:", cc_emails)
 
     msg = EmailMultiAlternatives(
         subject,

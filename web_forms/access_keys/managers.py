@@ -6,7 +6,7 @@ class SimpleUserManager(BaseUserManager):
         self,
         email,
         plan="free",
-        stripe_subscription_id=None,
+        stripe_subscription_id="",
         auto_reply=False,
         **extra_fields
     ):
@@ -28,7 +28,7 @@ class SimpleUserManager(BaseUserManager):
         email,
         password=None,
         plan="free",
-        stripe_subscription_id=None,
+        stripe_subscription_id="",
         auto_reply=False,
         **extra_fields
     ):

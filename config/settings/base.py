@@ -6,6 +6,7 @@ from pathlib import Path
 import environ
 from celery.schedules import crontab
 from corsheaders.defaults import default_headers
+from django.urls import reverse_lazy
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # web_forms/
@@ -346,6 +347,7 @@ CSRF_TRUSTED_ORIGINS = [
     "https://formslite.io",
     "https://*.up.railway.app",
     "https://api.formslite.io",
+    "https://*.ngrok-free.app",
 ]
 
 SPECTACULAR_SETTINGS = {
@@ -364,3 +366,16 @@ DEFAULT_FROM_EMAIL_ADDR = env(
 DEFAULT_FROM_EMAIL = f"FormsLite.io <{DEFAULT_FROM_EMAIL_ADDR}>"
 
 AUTH_USER_MODEL = "access_keys.SimpleUser"
+
+LOGIN_URL = reverse_lazy("dashboard:sign_in")
+
+
+# Notion integration
+NOTION_CLIENT_ID = env("NOTION_CLIENT_ID")
+NOTION_CLIENT_SECRET = env("NOTION_CLIENT_SECRET")
+NOTION_AUTHORIZATION_URL = env(
+    "NOTION_AUTHORIZATION_URL", default="https://api.notion.com/v1/oauth/authorize"
+)
+NOTION_TOKEN_URL = env(
+    "NOTION_TOKEN_URL", default="https://api.notion.com/v1/oauth/token"
+)
