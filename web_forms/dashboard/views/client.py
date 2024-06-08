@@ -50,7 +50,7 @@ class SendSignInEmail(View):
     def _send_verification_and_respond(user: SimpleUser) -> HttpResponse:
         send_sign_in_email(user)
         message = (
-            f"We sent your ⚡️FormsLite.io login link to"
+            f"We sent your ⚡️FormsLite.io login link to "
             f'<a href=mailto:{user.email}" target="_blank">{user.email}</a> '
             "Please check your email to login"
         )

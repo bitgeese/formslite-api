@@ -22,8 +22,11 @@
           </div>
           <div class="flex-none">
             <div class="flex items-center w-full">
+            {% if request.user.is_authenticated %}
               <p class="text-sm font-mono text-gray-400 font-thin">{{ request.user.email }}</p>
+            {% endif %}
               <div class="divider divider-horizontal"></div>
+              {% if request.user.is_authenticated %}
               <a href="{% url 'dashboard:sign_out' %}" class="btn btn-ghost">
                 Logout
                 <svg width="24"
@@ -38,6 +41,9 @@
                   </path>
                 </svg>
               </a>
+              {% else %}
+              
+              {% endif %}
             </div>
           </div>
         </div>

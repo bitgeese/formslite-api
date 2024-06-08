@@ -1,6 +1,7 @@
 import uuid
 from enum import Enum
 
+from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.cache import cache
 from django.db import models
@@ -11,6 +12,17 @@ from web_forms.utils.emails import send_auto_respond
 from .managers import SimpleUserManager
 
 USAGE_KEY = "access_key_usage_{access_key_id}"
+
+class UserSettings(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,
+                                on_delete=models.CASCADE, related_name="settings")
+    
+    # auto responder settings
+    auto_responder_enabled = models.BooleanField(default=False)
+    auto_responder_from_name = models.CharField(max_length=125, default="Your Company Name")
+    auto_responder_subject = models.CharField(max_length=125, default="Auto Responder Email Subject")
+    autro_responder_intro_text = models.TextField(null=True, blank=True, default="")
+    auto_responder_include_copy = models.BooleanField(default=True)
 
 
 class SimpleUser(AbstractBaseUser, PermissionsMixin):
