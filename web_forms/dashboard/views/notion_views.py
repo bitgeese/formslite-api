@@ -1,7 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
-from web_forms.utils.notion_integration import get_access_token, get_authorization_url
+from web_forms.utils.notion_integration import (get_access_token,
+                                                get_authorization_url)
 
 
 @login_required

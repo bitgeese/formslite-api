@@ -5,7 +5,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
 from web_forms.access_keys.models import SimpleUser, UserSettings
-from web_forms.utils.notion_integration import get_all_databases
 
 from ..forms import AutoRespondSettingsForm, MagicSignInForm, NotionLinkForm
 from ..magic_links import decode_uid, get_user_by_uid, send_sign_in_email
@@ -87,7 +86,7 @@ def home(request: HttpRequest) -> HttpResponse:
                 "form1_success": form_1_success,
                 "form2": form2,
                 "form2_success": form_2_success,
-                "databases": get_all_databases(request.user.settings.notion_token),
+                "databases": request.user.notion_client.get_all_databases(),
                 "access_keys": request.user.keys.all(),
                 "notion_links": request.user.notion_links.all(),
             },

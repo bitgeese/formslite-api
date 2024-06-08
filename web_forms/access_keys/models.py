@@ -7,8 +7,8 @@ from django.core.cache import cache
 from django.db import models
 
 from web_forms.models import BaseModel
-from web_forms.utils import notion_integration
 from web_forms.utils.emails import send_auto_respond
+from web_forms.utils.notion_integration import NotionClient
 
 from .managers import SimpleUserManager
 
@@ -81,6 +81,10 @@ class SimpleUser(AbstractBaseUser, PermissionsMixin):
     def is_paid(self):
         return self.plan != self.PlanEnum.FREE.value
 
+    @property
+    def notion_client(self):
+        return NotionClient(token=self.token)
+
 
 class AccessKey(BaseModel):
     MONTHLY_USE_LIMIT = 300
@@ -130,7 +134,7 @@ class AccessKey(BaseModel):
             self.user.is_paid
         ):  # TODO: update condition to chek if notion integration exiss
             for link in self.notion_links.all():
-                notion_integration.add_row_to_database(
+                self.user.notion_client.add_row_to_database(
                     self.user.settings.notion_token, link.database_id, submission_data
                 )
 
