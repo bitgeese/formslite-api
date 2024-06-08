@@ -7,14 +7,11 @@ from django.core.cache import cache
 from django.db import models
 
 from web_forms.models import BaseModel
+from web_forms.utils import notion_integration
 from web_forms.utils.emails import send_auto_respond
 
 from .managers import SimpleUserManager
-from notion.client import NotionClient
 
-class NotionClientWrapper:
-    def __init__(self, token_v2):
-        self.client = NotionClient(token_v2=token_v2)
 USAGE_KEY = "access_key_usage_{access_key_id}"
 
 
@@ -33,6 +30,9 @@ class UserSettings(models.Model):
     )
     auto_responder_intro_text = models.TextField(null=True, blank=True, default="")
     auto_responder_include_copy = models.BooleanField(default=True)
+
+    # notion integration settings
+    notion_token = models.CharField(max_length=255, blank=True, null=True)
 
 
 class SimpleUser(AbstractBaseUser, PermissionsMixin):
@@ -66,17 +66,8 @@ class SimpleUser(AbstractBaseUser, PermissionsMixin):
     REQUIRED_FIELDS = []
 
     def auto_respond(self, submission_data):
-        if self.plan != self.PlanEnum.FREE.value and self.auto_reply:
+        if self.is_paid and self.auto_reply:
             send_auto_respond(submission_data, self.settings)
-    
-    def send_to_notion(self, submission_data):
-        if self.plan != self.PlanEnum.FREE.value:# TODO: update condition to chek if notion link is there
-            notion_client = NotionClient(token_v2='secret_bnoxyp1XtwmXUZPBfdaIw1a3nWImSx97VijA5IMBjD3')
-            collection_view = notion_client.get_collection_view('https://www.notion.so/641b164e40c84f848dfc5a9861c2316f?v=ff7286f4b0e946b29da9440655f064e2&pvs=4')
-            row = collection_view.collection.add_row()
-            for key, value in submission_data.items():
-                setattr(row, key, value)
-
 
     def upgrade_to_plus_plan(self):
         if self.plan != self.PlanEnum.PLUS.value:
@@ -85,6 +76,10 @@ class SimpleUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    @property
+    def is_paid(self):
+        return self.plan != self.PlanEnum.FREE.value
 
 
 class AccessKey(BaseModel):
@@ -129,3 +124,29 @@ class AccessKey(BaseModel):
     @property
     def cache_key(self):
         return USAGE_KEY.format(access_key_id=self.id)
+
+    def send_to_notion(self, submission_data):
+        if (
+            self.user.is_paid
+        ):  # TODO: update condition to chek if notion integration exiss
+            for link in self.notion_links.all():
+                notion_integration.add_row_to_database(
+                    self.user.settings.notion_token, link.database_id, submission_data
+                )
+
+
+class NotionLink(models.Model):
+    user = models.ForeignKey(
+        SimpleUser, on_delete=models.CASCADE, related_name="notion_links"
+    )
+    database_id = models.CharField(max_length=125)
+    database_name = models.CharField(max_length=125)
+    access_key = models.ForeignKey(
+        AccessKey, on_delete=models.CASCADE, related_name="notion_links"
+    )
+
+    # class Meta:
+    #     unique_together = ('database_id', 'access_key',)
+
+    def __str__(self):
+        return f"{self.database_name} - {self.access_key.id}"

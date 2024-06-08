@@ -5,8 +5,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
 from web_forms.access_keys.models import SimpleUser, UserSettings
+from web_forms.utils.notion_integration import get_all_databases
 
-from ..forms import AutoRespondSettingsForm, MagicSignInForm
+from ..forms import AutoRespondSettingsForm, MagicSignInForm, NotionLinkForm
 from ..magic_links import decode_uid, get_user_by_uid, send_sign_in_email
 
 
@@ -59,21 +60,53 @@ class SendSignInEmail(View):
 
 def home(request: HttpRequest) -> HttpResponse:
     if not request.user.is_anonymous and request.user.has_verified_email:
-        form_1_success = ""
+        form_1_success, form_2_success = "", ""
         settings_instance = get_object_or_404(UserSettings, user=request.user)
         if request.method == "POST":
             form1 = AutoRespondSettingsForm(request.POST, instance=settings_instance)
             if form1.is_valid():
                 form1.save()
                 form_1_success = "Settings updated"
+            form2 = NotionLinkForm(request.POST)
+            if form2.is_valid():
+                instance = form2.save(commit=False)
+                instance.user = request.user
+                instance.save()
+                form_2_success = "Link Added"
+
         else:
             form1 = AutoRespondSettingsForm(instance=settings_instance)
+            form2 = NotionLinkForm()
 
+        print(request.user.notion_links.all())
         return render(
-            request, "home.html", {"form1": form1, "form1_success": form_1_success}
+            request,
+            "home.html",
+            {
+                "form1": form1,
+                "form1_success": form_1_success,
+                "form2": form2,
+                "form2_success": form_2_success,
+                "databases": get_all_databases(request.user.settings.notion_token),
+                "access_keys": request.user.keys.all(),
+                "notion_links": request.user.notion_links.all(),
+            },
         )
     else:
         return redirect("dashboard:sign_in")
+
+
+def add_notion_link(request):
+    if request.method == "POST":
+        form = NotionLinkForm(request.POST)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.user = request.user
+            instance.save()
+            print(instance)
+            return redirect("dashboard:home")
+        else:
+            return form.errors
 
 
 def logout(request: HttpRequest) -> HttpResponse:

@@ -1,6 +1,6 @@
 from django import forms
 
-from web_forms.access_keys.models import UserSettings
+from web_forms.access_keys.models import NotionLink, UserSettings
 
 
 class MagicSignInForm(forms.Form):
@@ -17,3 +17,9 @@ class AutoRespondSettingsForm(forms.ModelForm):
             "auto_responder_intro_text",
             "auto_responder_include_copy",
         ]
+
+
+class NotionLinkForm(forms.ModelForm):
+    class Meta:
+        model = NotionLink
+        fields = ["database_id", "database_name", "access_key"]
