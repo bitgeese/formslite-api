@@ -87,7 +87,7 @@ class SimpleUser(AbstractBaseUser, PermissionsMixin):
 class AccessKey(BaseModel):
     MONTHLY_USE_LIMIT = 300
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=125)
+    name = models.CharField(max_length=125, default="Access Key")
     user = models.ForeignKey(SimpleUser, on_delete=models.CASCADE, related_name="keys")
     is_active = models.BooleanField(default=True)
 
@@ -136,6 +136,9 @@ class AccessKey(BaseModel):
                     database_id=link.database_id,
                     data=submission_data,
                 )
+
+    def __str__(self):
+        return f"{self.name} ({self.id})"
 
 
 class NotionLink(models.Model):

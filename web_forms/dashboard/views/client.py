@@ -80,6 +80,10 @@ def home(request: HttpRequest) -> HttpResponse:
             form1 = AutoRespondSettingsForm(instance=settings_instance)
             form2 = NotionLinkForm()
 
+        if request.user.settings.notion_token:
+            databases = request.user.notion_client.get_all_databases()
+        else:
+            databases = []
         return render(
             request,
             "home.html",
@@ -88,7 +92,7 @@ def home(request: HttpRequest) -> HttpResponse:
                 "form1_success": form_1_success,
                 "form2": form2,
                 "form2_success": form_2_success,
-                "databases": request.user.notion_client.get_all_databases(),
+                "databases": databases,
                 "access_keys": request.user.keys.all(),
                 "notion_links": request.user.notion_links.all(),
             },
