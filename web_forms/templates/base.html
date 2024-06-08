@@ -1,19 +1,57 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Django Project{% endblock %}</title>
-    <!-- Tailwind CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <!-- DaisyUI -->
-    <link href="https://cdn.jsdelivr.net/npm/daisyui@1.14.0/dist/full.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100 text-gray-900">
-    {% block content %}
-    {% endblock %}
-    
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      {% block title %}FormsLite{% endblock %}
+    </title>
+    <link rel="stylesheet" href="https://rsms.me/inter/inter.css" />
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-3xl">
+        <div class="navbar items-center bg-base-100">
+          <div class="flex-1">
+            <a href="{% url 'dashboard:home' %}" class="text-2xl font-bold">
+              <span class="font-bold text-slate-800">⚡️Forms</span><span class="text-slate-500">Lite.io</span>
+            </a>
+          </div>
+          <div class="flex-none">
+            <div class="flex items-center w-full">
+            {% if request.user.is_authenticated %}
+              <p class="text-sm font-mono text-gray-400 font-thin">{{ request.user.email }}</p>
+            {% endif %}
+              <div class="divider divider-horizontal"></div>
+              {% if request.user.is_authenticated %}
+              <a href="{% url 'dashboard:sign_out' %}" class="btn btn-ghost">
+                Logout
+                <svg width="24"
+                     height="24"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     class="inline-block w-6 h-6 stroke-current">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 8.75L19.25 12L15.75 15.25">
+                  </path>
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 12H10.75"></path>
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.25 4.75H6.75C5.64543 4.75 4.75 5.64543 4.75 6.75V17.25C4.75 18.3546 5.64543 19.25 6.75 19.25H15.25">
+                  </path>
+                </svg>
+              </a>
+              {% else %}
+
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% block content %}{% endblock %}
+      </div>
+    </div>
     <!-- Alpine.js -->
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.9.6/dist/cdn.min.js" defer></script>
-</body>
+    <script src="//unpkg.com/alpinejs" defer></script>
+
+  </body>
 </html>

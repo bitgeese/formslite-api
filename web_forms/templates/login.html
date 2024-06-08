@@ -1,20 +1,17 @@
 {% extends "base.html" %}
 
 {% block title %}Login{% endblock %}
-
 {% block content %}
-    <div class="container mx-auto p-4">
-        <h1 class="text-4xl font-bold">FormsLite</h1>
-        <p class="mt-4">Enter your email to get a login link</p>
-        <form method="post" action="{% url 'dashboard:sign_in' %}">
-            <p>Sign in</p>
-            {% csrf_token %}
-            <input type="text" name="email" placeholder="Email" required>
-            <button type="submit">Sign in</button>
-            {% if error %}
-                <div id="error">{{error}}</div> 
-            {% endif %}
-            
-        </form>
-    </div>
+
+  <div class="container mx-auto p-4">
+    <p class="mt-4">Enter your email to get a login link</p>
+    <form method="post" action="{% url 'dashboard:sign_in' %}">
+      {% csrf_token %}
+      <div class="join">
+        <input required name="email" class="input input-bordered join-item" placeholder="Email"/>
+        <button type="submit" class="btn join-item rounded-r-full">Send Login Link</button>
+      </div>
+      {% if error %}<div id="error">{{ error }}</div>{% endif %}
+    </form>  
+  </div>
 {% endblock %}

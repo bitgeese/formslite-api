@@ -1,0 +1,24 @@
+{
+  "name": "web_forms_backend",
+  "version": "1.0.0",
+  "description": "Easy Web Forms for your site",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "scripts": {
+    "build:css": "tailwindcss -i ./web_forms/static/css/project.css -o ./web_forms/static/css/styles.css"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.0.6",
+    "@fontsource-variable/inter": "^5.0.18",
+    "tailwindcss": "^3.4.4"
+  },
+  "devDependencies": {
+    "daisyui": "^4.12.2"
+  }
+}

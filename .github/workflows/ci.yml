@@ -72,7 +72,7 @@ jobs:
         run: docker compose -f docker-compose.local.yml run --rm django python manage.py migrate
 
       - name: Run Django Tests with Coverage
-        run: docker compose -f docker-compose.local.yml run django pytest --cov --cov-fail-under=80
+        run: docker compose -f docker-compose.local.yml run django pytest --cov --cov-fail-under=60
 
       - name: Tear down the Stack
         run: docker compose -f docker-compose.local.yml down

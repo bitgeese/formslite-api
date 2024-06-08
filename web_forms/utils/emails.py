@@ -95,14 +95,18 @@ def send_usage_limit_reached_email(access_key):
     send_mail(subject, message, from_email, recipient_list)
 
 
-def send_auto_respond(submission_data):
+def send_auto_respond(submission_data, user_settings):
+    if not user_settings.auto_responder_enabled:
+        return
+    if not submission_data.get("email"):
+        return
     from_email = settings.DEFAULT_FROM_EMAIL
-    from_name = ""
+    from_name = user_settings.auto_responder_from_name
     if from_name:
         from_email = f"{from_name} <{settings.DEFAULT_FROM_EMAIL_ADDR}>"
 
-    intro_text = ""
-    show_submission_copy = True
+    intro_text = user_settings.auto_responder_intro_text
+    show_submission_copy = user_settings.auto_responder_copy_submission
     text_content = (
         f"{intro_text}\n"
         f"{format_dict_for_email(submission_data) if show_submission_copy else ''}"
@@ -116,14 +120,14 @@ def send_auto_respond(submission_data):
         )
     )
 
-    subject = "sample text"
-    submission_email = ""
+    subject = user_settings.auto_responder_subject
+    submission_email = [submission_data.get("email")]
 
     msg = EmailMultiAlternatives(
         subject,
         text_content,
         from_email,
-        [submission_email],
+        submission_email,
     )
     msg.attach_alternative(html_content, "text/html")
     msg.send(fail_silently=False)
