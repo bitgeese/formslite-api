@@ -10,7 +10,11 @@ from web_forms.models import BaseModel
 from web_forms.utils.emails import send_auto_respond
 
 from .managers import SimpleUserManager
+from notion.client import NotionClient
 
+class NotionClientWrapper:
+    def __init__(self, token_v2):
+        self.client = NotionClient(token_v2=token_v2)
 USAGE_KEY = "access_key_usage_{access_key_id}"
 
 
@@ -64,6 +68,15 @@ class SimpleUser(AbstractBaseUser, PermissionsMixin):
     def auto_respond(self, submission_data):
         if self.plan != self.PlanEnum.FREE.value and self.auto_reply:
             send_auto_respond(submission_data, self.settings)
+    
+    def send_to_notion(self, submission_data):
+        if self.plan != self.PlanEnum.FREE.value:# TODO: update condition to chek if notion link is there
+            notion_client = NotionClient(token_v2='secret_bnoxyp1XtwmXUZPBfdaIw1a3nWImSx97VijA5IMBjD3')
+            collection_view = notion_client.get_collection_view('https://www.notion.so/641b164e40c84f848dfc5a9861c2316f?v=ff7286f4b0e946b29da9440655f064e2&pvs=4')
+            row = collection_view.collection.add_row()
+            for key, value in submission_data.items():
+                setattr(row, key, value)
+
 
     def upgrade_to_plus_plan(self):
         if self.plan != self.PlanEnum.PLUS.value:

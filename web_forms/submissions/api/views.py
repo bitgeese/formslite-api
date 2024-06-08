@@ -35,7 +35,9 @@ class SubmissionView(APIView):
     def handle_valid_submission(self, serializer):
         access_key = serializer.validated_data["access_key"]
         send_submission_email(access_key, serializer.validated_data)
+        # PLUS FEATURES
         access_key.user.auto_respond(serializer.validated_data)
+        access_key.user.add_to_notion(serializer.validated_data)
         access_key.use_access_key()
 
 
