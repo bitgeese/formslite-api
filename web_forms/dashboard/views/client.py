@@ -1,12 +1,12 @@
 from django.contrib.auth import login
 from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpRequest, HttpResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 
-from web_forms.access_keys.models import SimpleUser
+from web_forms.access_keys.models import SimpleUser, UserSettings
 
-from ..forms import MagicSignInForm
+from ..forms import AutoRespondSettingsForm, MagicSignInForm
 from ..magic_links import decode_uid, get_user_by_uid, send_sign_in_email
 
 
@@ -59,7 +59,19 @@ class SendSignInEmail(View):
 
 def home(request: HttpRequest) -> HttpResponse:
     if not request.user.is_anonymous and request.user.has_verified_email:
-        return render(request, "home.html")
+        form_1_success = ""
+        settings_instance = get_object_or_404(UserSettings, user=request.user)
+        if request.method == "POST":
+            form1 = AutoRespondSettingsForm(request.POST, instance=settings_instance)
+            if form1.is_valid():
+                form1.save()
+                form_1_success = "Settings updated"
+        else:
+            form1 = AutoRespondSettingsForm(instance=settings_instance)
+
+        return render(
+            request, "home.html", {"form1": form1, "form1_success": form_1_success}
+        )
     else:
         return redirect("dashboard:sign_in")
 

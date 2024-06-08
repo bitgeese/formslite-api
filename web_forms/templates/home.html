@@ -2,22 +2,29 @@
 
 {% block title %}Home{% endblock %}
 {% block content %}
-  <div class="flex flex-col w-full border-opacity-50">
+  <div x-data="{
+    auto_responder: {% if form1.auto_responder_enabled.value %}true{% else %}false{% endif %}
+}" class="flex flex-col w-full border-opacity-50">
     <div class="divider">
       Auto Responder
       <label class="cursor-pointer label">
-        <input type="checkbox" class="toggle toggle-primary" checked />
+        <input x-model="auto_responder" @click="$refs.autoresponder.checked = !$refs.autoresponder.checked" type="checkbox" class="toggle toggle-primary" />
       </label>
     </div>
-    <div class="overflow-hidden rounded-lg bg-base-200 shadow">
-      <form class="px-4 py-5 sm:p-6 space-y-4">
+    <div class="overflow-hidden rounded-lg bg-base-300 shadow">
+
+      <form method="POST" class="px-4 py-5 sm:p-6 space-y-4">
+        {% csrf_token %}
+        <input x-ref="autoresponder" type="checkbox" name="auto_responder_enabled" class="hidden" {% if form1.auto_responder_enabled.value %}checked{% endif %} />
         <label class="form-control w-full">
           <div class="label">
             <span class="label-text">From Name</span>
           </div>
           <input type="text"
-                 name="from_name"
+                 x-bind:disabled="!auto_responder"
+                 name="auto_responder_from_name"
                  placeholder="From Name (Company Name)"
+                 value="{{ form1.auto_responder_from_name.value }}"
                  class="input input-bordered w-full" />
         </label>
         <label class="form-control w-full">
@@ -25,8 +32,10 @@
             <span class="label-text">Subject</span>
           </div>
           <input type="text"
-                 name="subject"
+                 x-bind:disabled="!auto_responder"
+                 name="auto_responder_subject"
                  placeholder="Autoresponder Subject"
+                 value="{{ form1.auto_responder_subject.value }}"
                  class="input input-bordered w-full" />
         </label>
         <label class="form-control">
@@ -34,16 +43,40 @@
             <span class="label-text">Intro Text</span>
           </div>
           <textarea class="textarea textarea-bordered h-24"
-                    name="intro"
-                    placeholder="Autoresponder Intro Text"></textarea>
+                    name="auto_responder_intro_text"
+                    x-bind:disabled="!auto_responder"
+                    placeholder="Autoresponder Intro Text">{{ form1.auto_responder_intro_text.value }}</textarea>
         </label>
         <div class="form-control max-w-xs">
           <label class="cursor-pointer label">
             <span class="label-text font-semibold">Include Submission Copy</span>
-            <input type="checkbox" class="toggle toggle-primary" checked />
+            <input type="checkbox" 
+                    x-bind:disabled="!auto_responder"
+                    name="auto_responder_include_copy" class="toggle toggle-primary" {% if form1.auto_responder_include_copy.value %}checked{% endif %} />
           </label>
         </div>
-        <button class="btn btn-block btn-primary">Update Settings</button>
+
+
+        {% if form1.non_field_errors %}
+            <div class=text-error">
+                {{ form1.non_field_errors }}
+            </div>
+        {% endif %}
+        
+        {% for field in form1 %}
+            {% for error in field.errors %}
+                <div class="text-error">{{ error }}</div>
+            {% endfor %}
+        {% endfor %}
+        {% if form1_success %}
+        <div class="text-success">
+            {{ form1_success }}
+        </div>
+        {% endif %}
+
+        <button 
+        :class="{ 'btn-disabled': !auto_responder}"
+        class="btn btn-block btn-primary">Save Settings</button>
       </form>
     </div>
   </div>
