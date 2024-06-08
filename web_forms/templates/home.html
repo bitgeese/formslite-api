@@ -1,60 +1,51 @@
 {% extends "base.html" %}
 
 {% block title %}Home{% endblock %}
-
 {% block content %}
-    
-
-
-    <div class="flex flex-col w-full border-opacity-50">
-
-        
-        <div class="divider">PLUS FEATURES</div>
-
-        <div class="overflow-hidden rounded-lg bg-base-200 shadow">
-            <div class="px-4 py-5 sm:p-6 space-y-4">
-                <div class="form-control max-w-xs">
-                    <label class="cursor-pointer label">
-                      <span class="label-text font-semibold">Auto Responder</span> 
-                      <input type="checkbox" class="toggle toggle-primary" checked />
-                    </label>
-                </div>
-                <label class="form-control w-full">
-                    <div class="label">
-                      <span class="label-text">From Name</span>
-                    </div>
-                    <input type="text" name="from_name" placeholder="From Name (Company Name)" class="input input-bordered w-full" />
-                </label>
-                <label class="form-control w-full">
-                    <div class="label">
-                      <span class="label-text">Subject</span>
-                    </div>
-                    <input type="text" name="subject" placeholder="Autoresponder Subject" class="input input-bordered w-full" />
-                </label>
-                <label class="form-control">
-                    <div class="label">
-                      <span class="label-text">Intro Text</span>
-                    </div>
-                    <textarea class="textarea textarea-bordered h-24" name="intro" placeholder="Autoresponder Intro Text"></textarea>
-                </label>
-                <div class="form-control max-w-xs">
-                    <label class="cursor-pointer label">
-                      <span class="label-text font-semibold">Include Submission Copy</span> 
-                      <input type="checkbox" class="toggle toggle-primary" checked />
-                    </label>
-                </div>
-            </div>
-        </div>
-
-
-
-        </div>
-
-    
-
+  <div class="flex flex-col w-full border-opacity-50">
+    <div class="divider">
+      Auto Responder
+      <label class="cursor-pointer label">
+        <input type="checkbox" class="toggle toggle-primary" checked />
+      </label>
     </div>
-
-    
-
-
+    <div class="overflow-hidden rounded-lg bg-base-200 shadow">
+      <form class="px-4 py-5 sm:p-6 space-y-4">
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text">From Name</span>
+          </div>
+          <input type="text"
+                 name="from_name"
+                 placeholder="From Name (Company Name)"
+                 class="input input-bordered w-full" />
+        </label>
+        <label class="form-control w-full">
+          <div class="label">
+            <span class="label-text">Subject</span>
+          </div>
+          <input type="text"
+                 name="subject"
+                 placeholder="Autoresponder Subject"
+                 class="input input-bordered w-full" />
+        </label>
+        <label class="form-control">
+          <div class="label">
+            <span class="label-text">Intro Text</span>
+          </div>
+          <textarea class="textarea textarea-bordered h-24"
+                    name="intro"
+                    placeholder="Autoresponder Intro Text"></textarea>
+        </label>
+        <div class="form-control max-w-xs">
+          <label class="cursor-pointer label">
+            <span class="label-text font-semibold">Include Submission Copy</span>
+            <input type="checkbox" class="toggle toggle-primary" checked />
+          </label>
+        </div>
+        <button class="btn btn-block btn-primary">Update Settings</button>
+      </form>
+    </div>
+  </div>
+</div>
 {% endblock %}
