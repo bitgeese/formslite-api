@@ -15,7 +15,6 @@ def notion_authorize(request):
 def notion_callback(request):
     code = request.GET.get("code")
     token_response = get_access_token(code)
-    print("RESPONSE:", token_response)
     access_token = token_response.get("access_token")
     settings = request.user.settings
     settings.notion_token = access_token

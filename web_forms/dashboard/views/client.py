@@ -62,6 +62,7 @@ def home(request: HttpRequest) -> HttpResponse:
         form_1_success, form_2_success = "", ""
         settings_instance = get_object_or_404(UserSettings, user=request.user)
         if request.method == "POST":
+            print("POST:", request.POST)
             form1 = AutoRespondSettingsForm(request.POST, instance=settings_instance)
             if form1.is_valid():
                 form1.save()

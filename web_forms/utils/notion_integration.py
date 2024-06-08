@@ -1,5 +1,6 @@
 import base64
 import json
+from datetime import datetime
 from urllib.parse import urlencode
 
 import requests
@@ -65,7 +66,10 @@ class NotionClient:
         return self.notion.databases.retrieve(database_id=database_id)
 
     def add_row_to_database(self, database_id, data):
-        properties = {"Name": {"title": [{"text": {"content": "Submission Title"}}]}}
+        create_title = (
+            lambda: f"Form Submission - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+        )
+        properties = {"Name": {"title": [{"text": {"content": create_title()}}]}}
         for key, value in data.items():
             properties[key] = {"rich_text": [{"text": {"content": value}}]}
         try:

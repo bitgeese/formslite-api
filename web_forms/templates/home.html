@@ -3,13 +3,14 @@
 {% block title %}Home{% endblock %}
 {% block content %}
 
-<form method="POST" action="/submission/">
+<!-- <form method="POST" action="/submission/">
     <input type="hidden" name="access_key" value="9199b289-9b09-4ccf-acba-00449fbc4451">
     <input class="input input-bordered" type="text" name="Description" value="This is a description">
     <button class="btn btn-primary" type="submit">Test</button>
-</form>
+</form> -->
 
   <div x-data="{
+    copy: {% if form1.auto_responder_include_copy.value %}true{% else %}false{% endif %},
     auto_responder: {% if form1.auto_responder_enabled.value %}true{% else %}false{% endif %}
 }" class="flex flex-col w-full border-opacity-50">
     <div class="divider">
@@ -28,7 +29,7 @@
             <span class="label-text">From Name</span>
           </div>
           <input type="text"
-                 x-bind:disabled="!auto_responder"
+                :class="{ 'input-disabled': !auto_responder }"
                  name="auto_responder_from_name"
                  placeholder="From Name (Company Name)"
                  value="{{ form1.auto_responder_from_name.value }}"
@@ -39,10 +40,10 @@
             <span class="label-text">Subject</span>
           </div>
           <input type="text"
-                 x-bind:disabled="!auto_responder"
                  name="auto_responder_subject"
                  placeholder="Autoresponder Subject"
                  value="{{ form1.auto_responder_subject.value }}"
+                 :class="{ 'input-disabled': !auto_responder }"
                  class="input input-bordered input-primary w-full" />
         </label>
         <label class="form-control">
@@ -51,38 +52,40 @@
           </div>
           <textarea class="textarea textarea-bordered textarea-primary h-24"
                     name="auto_responder_intro_text"
-                    x-bind:disabled="!auto_responder"
+                    :class="{ 'textarea-disabled': !auto_responder }"
                     placeholder="Autoresponder Intro Text">{{ form1.auto_responder_intro_text.value }}</textarea>
         </label>
         <div class="form-control max-w-xs">
           <label class="cursor-pointer label">
-            <span class="label-text font-semibold">Include Submission Copy</span>
+            <span class="label-text">Include Submission Copy: <span x-text="$refs.test.value"></span> </span>
             <input type="checkbox"
-                    x-bind:disabled="!auto_responder"
-                    name="auto_responder_include_copy" class="toggle toggle-primary" {% if form1.auto_responder_include_copy.value %}checked{% endif %} />
+                    x-model="copy"
+                    name="auto_responder_include_copy" 
+                    class="toggle toggle-primary "/>
           </label>
         </div>
+ 
+        <div class="h-4">
+            {% if form1.non_field_errors %}
+                <div class=text-error">
+                    {{ form1.non_field_errors }}
+                </div>
+            {% endif %}
 
-
-        {% if form1.non_field_errors %}
-            <div class=text-error">
-                {{ form1.non_field_errors }}
-            </div>
-        {% endif %}
-
-        {% for field in form1 %}
-            {% for error in field.errors %}
-                <div class="text-error">{{ error }}</div>
+            {% for field in form1 %}
+                {% for error in field.errors %}
+                    <div class="text-error">{{field.label}}: {{ error }}</div>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-        {% if form1_success %}
-        <div class="text-success">
-            {{ form1_success }}
-        </div>
-        {% endif %}
+            {% if form1_success %}
+            <div class="">
+                {{ form1_success }}
+            </div>
+            {% endif %}
 
-        <button
-        :class="{ 'btn-disabled': !auto_responder}"
+        </div>
+        
+        <button type="submit"
         class="btn btn-block btn-primary">Save Settings</button>
       </form>
     </div>

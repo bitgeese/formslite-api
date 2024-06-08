@@ -83,7 +83,7 @@ class SimpleUser(AbstractBaseUser, PermissionsMixin):
 
     @property
     def notion_client(self):
-        return NotionClient(token=self.token)
+        return NotionClient(token=self.settings.notion_token)
 
 
 class AccessKey(BaseModel):
@@ -135,7 +135,8 @@ class AccessKey(BaseModel):
         ):  # TODO: update condition to chek if notion integration exiss
             for link in self.notion_links.all():
                 self.user.notion_client.add_row_to_database(
-                    self.user.settings.notion_token, link.database_id, submission_data
+                    database_id=link.database_id,
+                    data=submission_data,
                 )
 
 
