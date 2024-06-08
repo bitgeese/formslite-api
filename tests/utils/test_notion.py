@@ -7,8 +7,7 @@ import pytest
 from django.conf import settings
 from django.urls import reverse_lazy
 
-from web_forms.utils.notion_integration import (get_access_token,
-                                                get_authorization_url)
+import web_forms.utils.notion_integration as notion_auth
 
 REDIRECT_URI = reverse_lazy("dashboard:notion_callback")
 
@@ -30,7 +29,7 @@ def test_get_authorization_url(settings_override):
         "scope": "database.read database.write",
     }
     assert (
-        get_authorization_url()
+        notion_auth.get_authorization_url()
         == f"{settings.NOTION_AUTHORIZATION_URL}?{urlencode(params)}"
     )
 
@@ -44,7 +43,7 @@ def test_get_access_token(mock_post, settings_override):
     mock_response.raise_for_status = lambda: None
     mock_response.json.return_value = expected_token
 
-    result = get_access_token(code)
+    result = notion_auth.get_access_token(code)
 
     assert result == expected_token
 

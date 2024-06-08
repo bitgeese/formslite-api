@@ -28,11 +28,11 @@ class UserSettings(models.Model):
     auto_responder_subject = models.CharField(
         max_length=125, default="Auto Responder Email Subject"
     )
-    auto_responder_intro_text = models.TextField(null=True, blank=True, default="")
+    auto_responder_intro_text = models.TextField(blank=True, default="")
     auto_responder_include_copy = models.BooleanField(default=True)
 
     # notion integration settings
-    notion_token = models.CharField(max_length=255, blank=True, null=True)
+    notion_token = models.CharField(max_length=255, blank=True, default="")
 
 
 class SimpleUser(AbstractBaseUser, PermissionsMixin):
@@ -50,7 +50,7 @@ class SimpleUser(AbstractBaseUser, PermissionsMixin):
         max_length=10, choices=PlanEnum.choices(), default=PlanEnum.FREE.value
     )
     stripe_subscription_id = models.CharField(
-        unique=True, max_length=125, null=True, blank=True
+        unique=True, max_length=125, default="", blank=True
     )
     auto_reply = models.BooleanField(default=False)
 
@@ -149,9 +149,6 @@ class NotionLink(models.Model):
     access_key = models.ForeignKey(
         AccessKey, on_delete=models.CASCADE, related_name="notion_links"
     )
-
-    # class Meta:
-    #     unique_together = ('database_id', 'access_key',)
 
     def __str__(self):
         return f"{self.database_name} - {self.access_key.id}"
