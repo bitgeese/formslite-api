@@ -13,8 +13,9 @@
     copy: {% if form1.auto_responder_include_copy.value %}true{% else %}false{% endif %},
     auto_responder: {% if form1.auto_responder_enabled.value %}true{% else %}false{% endif %}
 }" class="flex flex-col w-full border-opacity-50">
+    {% include "info.html" %}
     <div class="divider">
-      ⭐️Auto Responder
+      Auto Responder
       <label class="cursor-pointer label">
         <input x-model="auto_responder" @click="$refs.autoresponder.checked = !$refs.autoresponder.checked" type="checkbox" class="toggle toggle-primary" />
       </label>
@@ -91,7 +92,7 @@
     </div>
 
     <div class="divider">
-        ⭐️Notion Integration
+        Notion Integration
     </div>
     <div class="overflow-hidden rounded-lg bg-base-300 shadow">
         <form action="{% url 'dashboard:notion_add' %}" method="POST" class="px-4 py-5 sm:p-6 space-y-4">

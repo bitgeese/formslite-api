@@ -1,0 +1,24 @@
+<div class="divider">
+    Account Information
+</div>
+
+<div class="overflow-hidden rounded-lg bg-base-300 shadow">
+    <div class="px-4 py-5 sm:p-6">
+        <h2>Access Keys</h2>
+        <ul>
+            {% for access_key in request.user.keys.all %}
+            <li>
+                {{access_key}} - Active: {{access_key.is_active}} - Usage: {{access_key.usage}}
+            </li>
+            {% empty %}
+            <li class="flex justify-between items-center">
+                No Access Keys
+                <a href="https://formslite.io#accesskeyform" class="btn btn-primary">
+                    Create Access Key
+                </a>
+            </li>
+            {% endfor %}
+        </ul>
+        
+    </div>
+</div>
