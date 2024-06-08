@@ -49,9 +49,7 @@ class SimpleUser(AbstractBaseUser, PermissionsMixin):
     plan = models.CharField(
         max_length=10, choices=PlanEnum.choices(), default=PlanEnum.FREE.value
     )
-    stripe_subscription_id = models.CharField(
-        unique=True, max_length=125, default="", blank=True
-    )
+    stripe_subscription_id = models.CharField(max_length=125, default="", blank=True)
     auto_reply = models.BooleanField(default=False)
 
     has_verified_email = models.BooleanField(default=False)
