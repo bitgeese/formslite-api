@@ -1,12 +1,19 @@
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
+from django.views.decorators.http import require_POST
 
 from web_forms.access_keys.models import SimpleUser, UserSettings
 
-from ..forms import AutoRespondSettingsForm, MagicSignInForm, NotionLinkForm
+from ..forms import (
+    AutoRespondSettingsForm,
+    MagicSignInForm,
+    NotionLinkForm,
+    WhitelistedDomainForm,
+)
 from ..magic_links import decode_uid, get_user_by_uid, send_sign_in_email
 
 
@@ -101,17 +108,29 @@ def home(request: HttpRequest) -> HttpResponse:
         return redirect("dashboard:sign_in")
 
 
+@login_required
+@require_POST
 def add_notion_link(request):
-    if request.method == "POST":
-        form = NotionLinkForm(request.POST)
-        if form.is_valid():
-            instance = form.save(commit=False)
-            instance.user = request.user
-            instance.save()
-            print(instance)
-            return redirect("dashboard:home")
-        else:
-            return form.errors
+    form = NotionLinkForm(request.POST)
+    if form.is_valid():
+        instance = form.save(commit=False)
+        instance.user = request.user
+        instance.save()
+        print(instance)
+        return redirect("dashboard:home")
+    else:
+        return form.errors
+
+
+@login_required
+@require_POST
+def domain_whitelist(request):
+    form = WhitelistedDomainForm(request.POST, instance=request.user.settings)
+    if form.is_valid():
+        form.save()
+        return redirect("dashboard:home")
+    else:
+        return form.errors
 
 
 def logout(request: HttpRequest) -> HttpResponse:

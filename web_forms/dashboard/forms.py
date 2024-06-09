@@ -23,3 +23,18 @@ class NotionLinkForm(forms.ModelForm):
     class Meta:
         model = NotionLink
         fields = ["database_id", "database_name", "access_key"]
+
+
+class WhitelistedDomainForm(forms.ModelForm):
+    whitelisted_domains = forms.CharField(
+        widget=forms.Textarea, help_text="Enter one domain per line."
+    )
+
+    class Meta:
+        model = UserSettings
+        fields = ["whitelisted_domains"]
+
+    def clean_domains(self):
+        domains = self.cleaned_data["whitelisted_domains"]
+        domain_list = domains.splitlines()
+        return "\n".join(domain.strip() for domain in domain_list if domain.strip())

@@ -32,6 +32,8 @@ class UserSettings(models.Model):
     auto_responder_intro_text = models.TextField(blank=True, default="")
     auto_responder_include_copy = models.BooleanField(default=True)
 
+    whitelisted_domains = models.TextField(blank=True, default="")
+
     # notion integration settings
     notion_token = models.CharField(max_length=255, blank=True, default="")
 

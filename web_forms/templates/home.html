@@ -15,6 +15,27 @@
 }" class="flex flex-col w-full border-opacity-50">
     {% include "info.html" %}
     <div class="divider">
+      Whitelisted domains
+    </div>
+    <div class="overflow-hidden rounded-lg bg-base-300 shadow">
+      <form action="{% url 'dashboard:whitelist' %}" method="POST" class="px-4 py-5 sm:p-6 space-y-4">
+        {% csrf_token %}
+        <label class="form-control w-full">
+          <textarea class="textarea textarea-bordered textarea-primary h-24"
+                    name="whitelisted_domains"
+                    placeholder="test.com
+example.com">{{ request.user.settings.whitelisted_domains }}</textarea>
+        </label>
+
+        <div class="h-8">
+
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          Update Domains
+        </button>
+      </form>
+    </div>
+    <div class="divider">
       Auto Responder
       <label class="cursor-pointer label">
         <input x-model="auto_responder" @click="$refs.autoresponder.checked = !$refs.autoresponder.checked" type="checkbox" class="toggle toggle-primary" />
@@ -99,7 +120,7 @@
             {% csrf_token %}
             <div>
                 <p>Selecet a databse, and make sure the form field names are the same as in your Notion database</p>
-                <a class="link link-primary" href="https://docs.formslite.io">Read Documenation</a>
+                <a class="link link-primary" target="_blank" href="https://docs.formslite.io/getting-started/plus-features/notion-database-integration">Read Documenation</a>
             </div>
 
             <div>
