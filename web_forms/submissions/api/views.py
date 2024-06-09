@@ -38,6 +38,7 @@ class SubmissionView(APIView):
         # PLUS FEATURES
         access_key.user.auto_respond(serializer.validated_data)
         access_key.send_to_notion(serializer.validated_data["data"])
+        access_key.send_to_webhook(serializer.validated_data["data"])
         access_key.use_access_key()
 
 

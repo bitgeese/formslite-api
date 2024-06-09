@@ -1,6 +1,7 @@
 import uuid
 from enum import Enum
 
+import requests
 from django.conf import settings
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.core.cache import cache
@@ -128,14 +129,19 @@ class AccessKey(BaseModel):
         return USAGE_KEY.format(access_key_id=self.id)
 
     def send_to_notion(self, submission_data):
-        if (
-            self.user.is_paid
-        ):  # TODO: update condition to chek if notion integration exiss
+        if self.user.is_paid and self.user.settings.notion_token:
             for link in self.notion_links.all():
                 self.user.notion_client.add_row_to_database(
                     database_id=link.database_id,
                     data=submission_data,
                 )
+
+    def send_to_webhook(self, submission_data):
+        webhook_url = submission_data.pop("webhook", None)
+        if self.user.is_paid and webhook_url:
+            response = requests.post(webhook_url, data=submission_data)
+            if response.status_code == 200:
+                return True
 
     def __str__(self):
         return f"{self.name} ({self.id})"
