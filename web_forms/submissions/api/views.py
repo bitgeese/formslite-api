@@ -1,6 +1,6 @@
 import logging
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 from rest_framework import status
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.permissions import AllowAny
@@ -21,6 +21,14 @@ class SubmissionView(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
     parser_classes = [FormParser, MultiPartParser]
     throttle_classes = [SubmissionRateThrottle]
+
+    def dispatch(self, request, *args, **kwargs):
+        referer = request.META.get("HTTP_REFERER")
+        if referer:
+            domain = referer.split("/")[2]
+            if not request.user.is_domain_whitelisted(domain):
+                return HttpResponseForbidden("This domain is not whitelisted.")
+        return super().dispatch(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

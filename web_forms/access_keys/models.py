@@ -86,6 +86,9 @@ class SimpleUser(AbstractBaseUser, PermissionsMixin):
     def notion_client(self):
         return NotionClient(token=self.settings.notion_token)
 
+    def is_domain_whitelisted(self, domain):
+        return domain in self.settings.whitelisted_domains.split("\n")
+
 
 class AccessKey(BaseModel):
     MONTHLY_USE_LIMIT = 300
