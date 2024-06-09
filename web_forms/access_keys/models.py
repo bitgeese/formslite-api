@@ -87,7 +87,10 @@ class SimpleUser(AbstractBaseUser, PermissionsMixin):
         return NotionClient(token=self.settings.notion_token)
 
     def is_domain_whitelisted(self, domain):
-        return domain in self.settings.whitelisted_domains.split("\n")
+        whitelisted_domains = self.settings.whitelisted_domains.split("\n")
+        if self.is_paid and whitelisted_domains:
+            return domain in whitelisted_domains
+        return True
 
 
 class AccessKey(BaseModel):

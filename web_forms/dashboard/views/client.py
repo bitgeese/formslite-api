@@ -6,14 +6,9 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.views.decorators.http import require_POST
 
+import web_forms.dashboard.forms as forms
 from web_forms.access_keys.models import SimpleUser, UserSettings
 
-from ..forms import (
-    AutoRespondSettingsForm,
-    MagicSignInForm,
-    NotionLinkForm,
-    WhitelistedDomainForm,
-)
 from ..magic_links import decode_uid, get_user_by_uid, send_sign_in_email
 
 
@@ -38,7 +33,7 @@ class SendSignInEmail(View):
     def get(self, request: HttpRequest) -> HttpResponse:
         if not request.user.is_anonymous and request.user.has_verified_email:
             return redirect("dashboard:home")
-        form = MagicSignInForm()
+        form = forms.MagicSignInForm()
         return render(request, "login.html", {"form": form})
 
     def post(self, request: HttpRequest) -> HttpResponse:
@@ -51,7 +46,7 @@ class SendSignInEmail(View):
             return render(
                 request,
                 "login.html",
-                {"form": MagicSignInForm(), "error": "user does not exist"},
+                {"form": forms.MagicSignInForm(), "error": "user does not exist"},
             )
         return self._send_verification_and_respond(user)
 
@@ -72,11 +67,13 @@ def home(request: HttpRequest) -> HttpResponse:
         settings_instance = get_object_or_404(UserSettings, user=request.user)
         if request.method == "POST":
             print("POST:", request.POST)
-            form1 = AutoRespondSettingsForm(request.POST, instance=settings_instance)
+            form1 = forms.AutoRespondSettingsForm(
+                request.POST, instance=settings_instance
+            )
             if form1.is_valid():
                 form1.save()
                 form_1_success = "Settings updated"
-            form2 = NotionLinkForm(request.POST)
+            form2 = forms.NotionLinkForm(request.POST)
             if form2.is_valid():
                 instance = form2.save(commit=False)
                 instance.user = request.user
@@ -84,8 +81,8 @@ def home(request: HttpRequest) -> HttpResponse:
                 form_2_success = "Link Added"
 
         else:
-            form1 = AutoRespondSettingsForm(instance=settings_instance)
-            form2 = NotionLinkForm()
+            form1 = forms.AutoRespondSettingsForm(instance=settings_instance)
+            form2 = forms.NotionLinkForm()
 
         if request.user.settings.notion_token:
             databases = request.user.notion_client.get_all_databases()
@@ -111,7 +108,7 @@ def home(request: HttpRequest) -> HttpResponse:
 @login_required
 @require_POST
 def add_notion_link(request):
-    form = NotionLinkForm(request.POST)
+    form = forms.NotionLinkForm(request.POST)
     if form.is_valid():
         instance = form.save(commit=False)
         instance.user = request.user
@@ -125,7 +122,7 @@ def add_notion_link(request):
 @login_required
 @require_POST
 def domain_whitelist(request):
-    form = WhitelistedDomainForm(request.POST, instance=request.user.settings)
+    form = forms.WhitelistedDomainForm(request.POST, instance=request.user.settings)
     if form.is_valid():
         form.save()
         return redirect("dashboard:home")
