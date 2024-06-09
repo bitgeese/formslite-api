@@ -27,6 +27,7 @@
             {% endif %}
               <div class="divider divider-horizontal"></div>
               {% if request.user.is_authenticated %}
+              <a href="{% url 'dashboard:admin' %}" class="btn btn-ghost">Admin</a>
               <a href="{% url 'dashboard:sign_out' %}" class="btn btn-ghost">
                 Logout
                 <svg width="24"

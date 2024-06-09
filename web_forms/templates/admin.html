@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<ul class="space-y-4">
+{% for user in users %}
+
+<li>
+    <h3>User: {{ user.email }}</h3>
+    <p> <span>Access Keys:</span>{{ user.keys.count }}</p>
+</li>
+{% endfor %}
+</ul>
+
+{% endblock %}

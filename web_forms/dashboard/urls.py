@@ -1,6 +1,6 @@
 from django.urls import path
 
-# from .views import admin as admin_views
+from .views import admin as admin_views
 from .views import client as client_views
 from .views import notion_views
 
@@ -17,4 +17,6 @@ urlpatterns = [
     path("notion/authorize/", notion_views.notion_authorize, name="notion_authorize"),
     path("notion/callback/", notion_views.notion_callback, name="notion_callback"),
     path("notion/addLink/", client_views.add_notion_link, name="notion_add"),
+    # admin panel
+    path("admin/", admin_views.admin_panel, name="admin"),
 ]
