@@ -32,6 +32,8 @@ class UserSettings(models.Model):
     auto_responder_intro_text = models.TextField(blank=True, default="")
     auto_responder_include_copy = models.BooleanField(default=True)
 
+    whitelisted_domains = models.TextField(blank=True, default="")
+
     # notion integration settings
     notion_token = models.CharField(max_length=255, blank=True, default="")
 
@@ -83,6 +85,12 @@ class SimpleUser(AbstractBaseUser, PermissionsMixin):
     @property
     def notion_client(self):
         return NotionClient(token=self.settings.notion_token)
+
+    def is_domain_whitelisted(self, domain):
+        whitelisted_domains = self.settings.whitelisted_domains.split("\n")
+        if self.is_paid and whitelisted_domains:
+            return domain in whitelisted_domains
+        return True
 
 
 class AccessKey(BaseModel):
