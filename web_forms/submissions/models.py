@@ -8,3 +8,4 @@ class Submission(BaseModel):
     access_key = models.ForeignKey(
         AccessKey, on_delete=models.CASCADE, related_name="submissions"
     )
+    is_spam = models.BooleanField(default=False)
