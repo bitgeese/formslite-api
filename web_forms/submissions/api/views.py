@@ -9,9 +9,11 @@ from rest_framework.views import APIView
 
 import web_forms.access_keys.tasks as tasks
 from web_forms.authentication import CsrfExemptSessionAuthentication
+from web_forms.submissions.utils.spam_detection import is_spam
 from web_forms.throttles import SubmissionRateThrottle
 from web_forms.utils.emails import send_submission_email
 
+from ..models import Submission as SubmissionAnalytics
 from .serializers import SubmissionSerializer
 
 logger = logging.getLogger(__name__)
@@ -22,6 +24,11 @@ class SubmissionView(APIView):
     authentication_classes = (CsrfExemptSessionAuthentication,)
     parser_classes = [FormParser, MultiPartParser]
     throttle_classes = [SubmissionRateThrottle]
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["request"] = self.request
+        return context
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -39,11 +46,17 @@ class SubmissionView(APIView):
         user_id = access_key.user.id
         access_key_id = access_key.id
         data = validated_data["data"]
-        send_submission_email(access_key, validated_data)
-        if access_key.user.is_paid:
-            tasks.auto_respond_task.delay(user_id, validated_data)
-            tasks.send_to_notion_task.delay(access_key_id, data)
-            tasks.send_to_webhook_task.delay(access_key_id, data)
+
+        # check for spam
+        if is_spam(data, self.request):
+            SubmissionAnalytics.objects.create(access_key=access_key, is_spam=True)
+        else:
+            send_submission_email(access_key, validated_data)
+            SubmissionAnalytics.objects.create(access_key=access_key)
+            if access_key.user.is_paid:
+                tasks.auto_respond_task.delay(user_id, validated_data)
+                tasks.send_to_notion_task.delay(access_key_id, data)
+                tasks.send_to_webhook_task.delay(access_key_id, data)
         access_key.use_access_key()
 
 

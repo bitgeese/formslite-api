@@ -381,3 +381,5 @@ NOTION_AUTHORIZATION_URL = env(
 NOTION_TOKEN_URL = env(
     "NOTION_TOKEN_URL", default="https://api.notion.com/v1/oauth/token"
 )
+
+ABUSEIPDB_KEY = env("ABUSEIPDB_KEY", default=None)
