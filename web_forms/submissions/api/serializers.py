@@ -2,10 +2,8 @@ from django.conf import settings
 from rest_framework import serializers
 
 from web_forms.access_keys.models import AccessKey
-from web_forms.submissions.utils.spam_detection import is_spam
 from web_forms.utils.emails import send_usage_limit_reached_email
 
-from ..models import Submission as SubmissionAnalytics
 from .fields import SemicolonSeparatedEmailField
 
 
@@ -29,13 +27,7 @@ class SubmissionSerializer(serializers.Serializer):
 
     def validate(self, data):
         data_field = {k: v for k, v in self.initial_data.items() if k != "access_key"}
-        if is_spam(data_field):
-            SubmissionAnalytics.objects.create(
-                access_key=data["access_key"], is_spam=True
-            )
-            raise serializers.ValidationError("Submission flagged as spam")
         if not data_field:
             raise serializers.ValidationError("Submission has no fields")
         data["data"] = data_field
-        SubmissionAnalytics.objects.create(access_key=data["access_key"])
         return data

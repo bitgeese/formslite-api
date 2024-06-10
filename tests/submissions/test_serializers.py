@@ -4,7 +4,6 @@ from rest_framework.exceptions import ValidationError
 
 from web_forms.access_keys.models import AccessKey
 from web_forms.submissions.api.serializers import SubmissionSerializer
-from web_forms.submissions.utils.spam_detection import HONEYPOT_FIELD
 
 
 @pytest.mark.django_db
@@ -52,22 +51,6 @@ def test_submission_serializer_access_key_disabled(access_key):
     with pytest.raises(ValidationError) as excinfo:
         serializer.is_valid(raise_exception=True)
     assert "Invalid access key provided" in str(excinfo.value)
-
-
-@pytest.mark.django_db
-def test_submission_serializer_spam_detected_honypot(access_key):
-    """Test that the serializer raises an error
-    when spam is submited"""
-    invalid_data = {
-        "access_key": str(access_key.id),
-        HONEYPOT_FIELD: "tuntenoeu",
-        "field1": "value1",
-        "field2": "value2",
-    }
-    serializer = SubmissionSerializer(data=invalid_data)
-    with pytest.raises(ValidationError) as excinfo:
-        serializer.is_valid(raise_exception=True)
-    assert "Submission flagged as spam" in str(excinfo.value)
 
 
 @pytest.mark.django_db
