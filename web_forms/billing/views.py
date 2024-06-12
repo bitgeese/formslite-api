@@ -36,6 +36,8 @@ class StripeWebhookView(APIView):
         handler = event_handlers.get(event["type"])
         if handler:
             handler(event)
+        else:
+            logger.warning("No handler found for event type: %s", event["type"])
 
         return JsonResponse({"status": "success"}, status=200)
 
@@ -48,7 +50,7 @@ class StripeWebhookView(APIView):
 
     def _handle_payment_succeeded(self, event):
         invoice = event["data"]["object"]
-        logger.info(f"Invoice: {invoice}")
+        logger.info("Handling payment succeeded for invoice: %s", invoice)
         email = invoice.get("customer_email")
         subscription_id = invoice.get("subscription")
 
@@ -57,6 +59,7 @@ class StripeWebhookView(APIView):
             simple_user.plan = SimpleUser.PlanEnum.PLUS.value
             simple_user.stripe_subscription_id = subscription_id
             simple_user.save()
+            logger.info("User %s upgraded to PLUS plan", email)
 
             self._send_email(
                 subject="You have PLUS plan",
@@ -66,15 +69,18 @@ class StripeWebhookView(APIView):
                 ),
                 recipient_list=[simple_user.email],
             )
+            logger.info("Sent email to %s about PLUS plan upgrade", email)
 
     def _handle_payment_failed(self, event):
         invoice = event["data"]["object"]
+        logger.info("Handling payment failed for invoice: %s", invoice)
         email = invoice.get("customer_email")
         if email:
             try:
                 simple_user = SimpleUser.objects.get(email=email)
                 simple_user.plan = SimpleUser.PlanEnum.FREE.value
                 simple_user.save()
+                logger.info("User %s downgraded to FREE plan", email)
                 self._send_email(
                     subject="PLUS plan renewal failed",
                     message=(
@@ -83,12 +89,17 @@ class StripeWebhookView(APIView):
                     ),
                     recipient_list=[simple_user.email],
                 )
+                logger.info("Sent email to %s about payment failure", email)
             except SimpleUser.DoesNotExist:
                 logger.exception("User with email %s does not exist", email)
 
     def _send_email(self, subject, message, recipient_list):
         from_email = settings.DEFAULT_FROM_EMAIL
-        send_mail(subject, message, from_email, recipient_list)
+        try:
+            send_mail(subject, message, from_email, recipient_list)
+            logger.info("Email sent to %s with subject '%s'", recipient_list, subject)
+        except Exception as e:
+            logger.exception("Failed to send email to %s: %s", recipient_list, e)
 
 
 stripe_webhook_view = StripeWebhookView.as_view()
