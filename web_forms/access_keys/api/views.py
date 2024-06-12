@@ -24,9 +24,13 @@ class AccessKeyCreateAPIView(APIView):
     throttle_classes = [AccessKeyCreateRateThrottle]
 
     def post(self, request, *args, **kwargs):
+        logger.info("Received request to create access key.")
         serializer = AccessKeySerializer(data=request.data)
         if serializer.is_valid():
             instance = serializer.save()
+            logger.info(
+                "Access key created successfully for email: %s", instance.user.email
+            )
 
             subject = "Your FormsLite.io Access Key!"
             message = f"Here is your access key: {instance.id}"
@@ -38,7 +42,9 @@ class AccessKeyCreateAPIView(APIView):
                 recipient_list,
                 fail_silently=False,
             )
+            logger.info("Email sent successfully to: %s", recipient_list)
             return HttpResponseRedirect("https://formslite.io")
+        logger.warning("Invalid data received: %s", serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
