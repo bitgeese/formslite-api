@@ -22,7 +22,7 @@ sphinx-autobuild==2024.4.16 # https://github.com/GaretJax/sphinx-autobuild
 # ------------------------------------------------------------------------------
 black==24.4.2
 isort==5.13.2
-flake8==7.0.0
+flake8==7.1.0
 
 
 ruff==0.4.8  # https://github.com/astral-sh/ruff
