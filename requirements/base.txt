@@ -24,6 +24,6 @@ django-cors-headers==4.3.1  # https://github.com/adamchainz/django-cors-headers
 drf-spectacular==0.27.2  # https://github.com/tfranzel/drf-spectacular
 
 django_extensions==3.2.3
-stripe==9.11.0
+stripe==10.0.0
 notion-client==2.2.1
 whitenoise==6.6.0
