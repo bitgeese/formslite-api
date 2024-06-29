@@ -7,3 +7,5 @@ from web_forms.access_keys.models import SimpleUser
 @staff_member_required
 def admin_panel(request):
     return render(request, "admin.html", {"users": SimpleUser.objects.all()})
+
+

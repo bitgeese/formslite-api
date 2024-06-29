@@ -41,6 +41,7 @@ class SendSignInEmail(View):
         try:
             user = SimpleUser.objects.get(email=email)
             if not user.is_paid:
+                # TODO move url to env variable
                 return redirect("https://formslite.io/pricing")
         except SimpleUser.DoesNotExist:
             return render(

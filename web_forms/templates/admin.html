@@ -9,6 +9,9 @@
 <li>
     <h3>User: {{ user.email }}</h3>
     <p> <span>Access Keys:</span>{{ user.keys.count }}</p>
+    {% for access_key in user.keys.all %}
+        {{access_key}} Submissions: {{access_key.usage}}
+    {% endfor %}
 </li>
 {% endfor %}
 </ul>

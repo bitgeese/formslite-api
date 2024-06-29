@@ -11,6 +11,8 @@ SKIP_FIELDS = [
     "reply_to",
     "cc_emails",
     HONEYPOT_FIELD,
+    "G-Recaptcha-Response",
+    "H-Captcha-Response",
 ]
 
 
